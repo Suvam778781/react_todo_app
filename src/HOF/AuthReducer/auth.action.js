@@ -107,7 +107,7 @@ const Register_FN = ({ firstname, lastname, email, password }) => {
     dispatch(userRegisterReq());
 
     try {
-      let data = await axios.post(`http://localhost:8090/client/register`, {
+      let data = await axios.post(`${process.env.REACT_APP_LOCAL}client/register`, {
         firstname,
         lastname,
         email,
@@ -147,13 +147,16 @@ const login_failure = () => {
 const login_noAcc_found = () => {
   return { type: actionTypes.NO_ACC_FOUND };
 };
+const WrongPass = () => {
+  return { type: actionTypes.WRONG_PASSWORD };
+};
 
 const Login_FN = ({ email, password, userType }) => {
   return async (dispatch) => {
     try {
       dispatch(login_req());
       const switchUrl = userType === "user" ? "user/login" : "client/login";
-    
+
       let data = await axios.post(
         `${process.env.REACT_APP_LOCAL}${switchUrl}`,
         {
@@ -166,14 +169,16 @@ const Login_FN = ({ email, password, userType }) => {
 
       if (data.message) {
         console.log(data.token);
-        
+
         dispatch(login_success(data.token));
       }
-      
     } catch (error) {
-      console.log(error.response.data)
-      if (error.response?.data) {
-        console.log(error.response.data,"chekc")
+      
+      if (error.response.data?.wrong) {
+       
+        dispatch(WrongPass())
+      }
+      else if (error.response?.data) {
         dispatch(login_noAcc_found());
       } else dispatch(login_failure());
     }

@@ -7,7 +7,8 @@ const intstate = {
   isUserAlreadyRegister: false,
   userLogin:false,
   AccNotFound:false,
-  loginToken:""
+  loginToken:"",
+  wrongPass:false
 
 };
 
@@ -16,7 +17,7 @@ const reducer = (state = intstate, action) => {
 
   switch (type) {
     case actionTypes.REGISTER_REQUEST:
-      console.log("register req");
+      
       return {
         ...state,
         loading: true,
@@ -56,12 +57,14 @@ const reducer = (state = intstate, action) => {
       };
 
       //login state reducer;
-      case actionTypes.LOGIN_REQ:return {...state,loading:true, userLogin:false, AccNotFound:false}
+      case actionTypes.LOGIN_REQ:return {...state,loading:true, userLogin:false, AccNotFound:false,wrongPass:false}
 
       case actionTypes.LOGIN_SUCCESS:return {...state,loading:false, userLogin:true,AccFound:true, loginToken:payload}
 
+      case actionTypes.WRONG_PASSWORD:return {...state, loading:false, wrongPass:true}
+
       case actionTypes.NO_ACC_FOUND:
-      console.log("login token")  
+      
       return {...state, loading:false ,AccNotFound:true,loginToken:"" }
 
       case actionTypes.LOGIN_ERROR:return {...state, loading:false , userLogin:false ,AccFound:false ,error:true,loginToken:""}
