@@ -172,7 +172,7 @@ export const assignTodoToUser = (todoId, email) => {
       }
       else if(data.error){
         alert(data.error)
-        dispatch({ type: ASSIGN_TODO_TO_USER_FAILURE, payload: error.message });
+        dispatch({ type: ASSIGN_TODO_TO_USER_FAILURE, payload: data.message });
       }
 
       
