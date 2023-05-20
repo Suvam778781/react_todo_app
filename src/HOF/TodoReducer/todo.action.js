@@ -1,38 +1,58 @@
 // Fetch Todos Action
-import { ADD_TODO_FAILURE, ADD_TODO_REQUEST, ADD_TODO_SUCCESS, ASSIGN_TODO_TO_USER_FAILURE, ASSIGN_TODO_TO_USER_REQUEST, ASSIGN_TODO_TO_USER_SUCCESS, DELETE_TODO_FAILURE, DELETE_TODO_REQUEST, DELETE_TODO_SUCCESS, FETCH_TODOS_FAILURE, FETCH_TODOS_REQUEST, FETCH_TODOS_SUCCESS, UPDATE_TODO_FAILURE, UPDATE_TODO_REQUEST, UPDATE_TODO_SUCCESS } from "./todo.actionTypes";
+import {
+  ADD_TODO_FAILURE,
+  ADD_TODO_REQUEST,
+  ADD_TODO_SUCCESS,
+  ASSIGN_TODO_TO_USER_FAILURE,
+  ASSIGN_TODO_TO_USER_REQUEST,
+  ASSIGN_TODO_TO_USER_SUCCESS,
+  DELETE_TODO_FAILURE,
+  DELETE_TODO_REQUEST,
+  DELETE_TODO_SUCCESS,
+  FETCH_TODOS_FAILURE,
+  FETCH_TODOS_REQUEST,
+  FETCH_TODOS_SUCCESS,
+  UPDATE_TODO_FAILURE,
+  UPDATE_TODO_REQUEST,
+  UPDATE_TODO_SUCCESS,
+} from "./todo.actionTypes";
 // Fetch all todos action
-export const fetchTodos = (page=1,limit=10) => {
+export const fetchTodos = (page = 1, limit = 10) => {
   return async (dispatch) => {
-    dispatch({ type: FETCH_TODOS_REQUEST });
 
-    console.log(process.env.NEXT_PUBLIC_BASE_URL)
+    console.log("mkjij",process.env.REACT_APP_LOCAL)
+    dispatch({ type: FETCH_TODOS_REQUEST });
     let url;
     try {
-      const details=JSON.parse(localStorage.getItem('details'));
-        if(details.role=="user"){
-          url="todo/useralltodo"
-         }
-         else {
-           url="todo/alltodo"
-         }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${url}?limit=${limit}&page=${page}`, {
-        headers: {
-          'Content-Type': 'text/plain',
-          'Authorization': details.token,
-          'Email': details.email
-        }
-      });
-      const data = await response.json();
-      console.log(data)
-      if (data) {
-        dispatch({ type: FETCH_TODOS_SUCCESS, payload: data});
+      let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role") || "client";
+      if (role == "user") {
+        url = "todo/useralltodo";
       } else {
-        dispatch({ type: FETCH_TODOS_FAILURE, error: 'Failed to fetch todos' });
+        url = "todo/alltodo";
+      }
+
+      const response = await fetch(
+        `${"http://localhost:8090"}/${url}?limit=${limit}&page=${page}`,
+        {
+          headers: {
+            "Content-Type": "text/plain",
+            Authorization: token,
+            Email: email,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      if (data) {
+        dispatch({ type: FETCH_TODOS_SUCCESS, payload: data });
+      } else {
+        dispatch({ type: FETCH_TODOS_FAILURE, error: "Failed to fetch todos" });
       }
     } catch (error) {
-      console.log(error)
-      dispatch({ type: FETCH_TODOS_FAILURE, error: 'An error occurred' });
+      console.log(error);
+      dispatch({ type: FETCH_TODOS_FAILURE, error: "An error occurred" });
     }
   };
 };
@@ -43,33 +63,33 @@ export const addTodo = (todo) => {
     dispatch({ type: ADD_TODO_REQUEST });
 
     try {
-      const details=JSON.parse(localStorage.getItem('details'));
+      let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role") || "client";
       let url;
-      if(details.role=="user"){
-      
-       url="todo/useraddtodo"
+      if (role == "user") {
+        url = "todo/useraddtodo";
+      } else {
+        url = "todo/addtodo";
       }
-      else {
-        url="todo/addtodo"
-      }
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${url}`, {
-        method: 'POST',
+      const response = await fetch(`${"http://localhost:8090"}/${url}`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': details.token,
-          'Email': details.email
+          "Content-Type": "application/json",
+          Authorization: token,
+          Email: email,
         },
-        body: JSON.stringify(todo)
+        body: JSON.stringify(todo),
       });
-        const data = await response.json();
-      console.log(response,data)
-        if(data.message){
+      const data = await response.json();
+      console.log(response, data);
+      if (data.message) {
         dispatch({ type: ADD_TODO_SUCCESS, payload: todo });
       } else {
-        dispatch({ type: ADD_TODO_FAILURE, error: 'Failed to add todo' });
+        dispatch({ type: ADD_TODO_FAILURE, error: "Failed to add todo" });
       }
     } catch (error) {
-      dispatch({ type: ADD_TODO_FAILURE, error: 'An error occurred' });
+      dispatch({ type: ADD_TODO_FAILURE, error: "An error occurred" });
     }
   };
 };
@@ -80,35 +100,35 @@ export const deleteTodo = (id) => {
     dispatch({ type: DELETE_TODO_REQUEST });
 
     try {
-      const details=JSON.parse(localStorage.getItem('details'));
+      let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role") || "client";
       let url;
-if(details.role=="user"){
-
- url="todo/userdeletetodo"
-
-}
-else{
-  url="todo/delete"
-}
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${url}/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': details.token,
-          'Email': details.email
+      if (role == "user") {
+        url = "todo/userdeletetodo";
+      } else {
+        url = "todo/delete";
+      }
+      const response = await fetch(
+        `${"http://localhost:8090"}/${url}/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+            Email: email,
+          },
         }
-      });
-    
-        dispatch({ type: DELETE_TODO_SUCCESS, payload: id });
-      
-        // dispatch({ type: DELETE_TODO_FAILURE, error: 'Failed to delete todo' });
-      
-    } catch (error) {
-      dispatch({ type: DELETE_TODO_FAILURE, error: 'An error occurred' });
-    }
-  };
-};
+      );
 
+      dispatch({ type: DELETE_TODO_SUCCESS, payload: id });
+
+      // dispatch({ type: DELETE_TODO_FAILURE, error: 'Failed to delete todo' });
+    } catch (error) {
+      dispatch({ type: DELETE_TODO_FAILURE, error: "An error occurred" });
+    }
+  };
+};
 
 // Update todo action
 export const updateTodo = (id, updatedTodo) => {
@@ -116,70 +136,73 @@ export const updateTodo = (id, updatedTodo) => {
     dispatch({ type: UPDATE_TODO_REQUEST });
     let url;
     try {
-      const details=JSON.parse(localStorage.getItem('details'));
-      if(details.role=="user"){
-      
-       url="todo/userupdatetodo"
+      let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role") || "client";
+      if (role == "user") {
+        url = "todo/userupdatetodo";
+      } else {
+        url = "todo/update";
       }
-      else{
-        url="todo/update"
-      }
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/${url}/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': details.token,
-          'Email':details.email
-        },
-        body: JSON.stringify(updatedTodo)
-      });
+      const response = await fetch(
+        `${"http://localhost:8090"}/${url}/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+            Email: email,
+          },
+          body: JSON.stringify(updatedTodo),
+        }
+      );
 
-        const data = await response.json();
-        console.log(data)
-        if(data.message){
-       
+      const data = await response.json();
+      console.log(data);
+      if (data.message) {
         dispatch({ type: UPDATE_TODO_SUCCESS, payload: updatedTodo });
       } else {
-        dispatch({ type: UPDATE_TODO_FAILURE, error: 'Failed to update todo' });
+        dispatch({ type: UPDATE_TODO_FAILURE, error: "Failed to update todo" });
       }
     } catch (error) {
-      console.log(error)
-      dispatch({ type: UPDATE_TODO_FAILURE, error: 'An error occurred' });}
+      console.log(error);
+      dispatch({ type: UPDATE_TODO_FAILURE, error: "An error occurred" });
     }
+  };
 };
 
-
-export const assignTodoToUser = (todoId, email) => {
+export const assignTodoToUser = (todoId, mail) => {
   return async (dispatch) => {
     dispatch({ type: ASSIGN_TODO_TO_USER_REQUEST });
-    const details=JSON.parse(localStorage.getItem('details'));
+    let email = localStorage.getItem("user_email");
+    let token = localStorage.getItem("login_token");
+    let role = localStorage.getItem("role") || "client";
+
     try {
       // Make API call to assign todo to user
-     let response= await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/assignto/${todoId}`, {
-        method: 'PATCH',
-        headers:{
-        Authorization:details.token,
-        Email:details.email,
-        exemail:email
-        },
-      });
+      let response = await fetch(
+        `${process.env.REACT_APP_LOCAL}/user/assignto/${todoId}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: token,
+            Email: email,
+            exemail: mail,
+          },
+        }
+      );
 
-      let data=await response.json()
-      console.log(data)
-      if(data.message){
-        alert(data.message)
+      let data = await response.json();
+      console.log(data);
+      if (data.message) {
+        alert(data.message);
         dispatch({ type: ASSIGN_TODO_TO_USER_SUCCESS, payload: todoId });
-      }
-      else if(data.error){
-        alert(data.error)
+      } else if (data.error) {
+        alert(data.error);
         dispatch({ type: ASSIGN_TODO_TO_USER_FAILURE, payload: data.message });
       }
-
-      
     } catch (error) {
       dispatch({ type: ASSIGN_TODO_TO_USER_FAILURE, payload: error.message });
     }
   };
 };
-
- 

@@ -63,7 +63,6 @@ const todoReducer = (state = initialState, action) => {
           return ele;
         }
       });
-      console.log(updatedtodo);
       return {
         ...state,
         todos: updatedtodo,

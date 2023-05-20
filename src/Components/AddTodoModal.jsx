@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTodo } from '@/utils/redux-arch/todoreducer/action';
+import { addTodo } from '../HOF/TodoReducer/todo.action';
 import {
   Dialog,
   DialogTitle,
@@ -20,7 +20,7 @@ const AddTodoModal = ({ openAddTodoModal, setOpenAddTodoModal }) => {
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
  
-  
+
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -41,7 +41,7 @@ const AddTodoModal = ({ openAddTodoModal, setOpenAddTodoModal }) => {
       status,
     };
     dispatch(addTodo(newTodo));
-    onClose();
+    setOpenAddTodoModal(false)
   };
 
   return (

@@ -11,21 +11,32 @@ import {
   IconButton,
   Box,
   Button,
+  LinearProgress,
 } from "@mui/material";
 import { Assignment, Delete, Edit } from "@mui/icons-material";
 import EmailModal from "./AssignUserTodoToAnathorUser.jsx";
 import EditTodoModal from "./EditTodoModal";
+import AddTodoModal from "./AddTodoModal.jsx";
+import { useDispatch } from "react-redux";
+import { deleteTodo } from "../HOF/TodoReducer/todo.action.js";
 
 const TodoList = ({ todos, loading, auth }) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openAddTodoModal, setOpenAddTodoModal] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  let role = JSON.parse(localStorage.getItem("role")) || "client";
   const handleAssignTodo = () => {};
 
-  const handleDeleteTodo = () => {};
-
+  const handleDeleteTodo = (id) => {
+    dispatch(deleteTodo(id));
+  };
   return (
     <Box>
+      <Typography fontSize={"70px"} color={"grey"} margin={"22px"}>
+        {role} Table
+      </Typography>
       <TableContainer
         style={{
           height: "400px",
@@ -36,8 +47,10 @@ const TodoList = ({ todos, loading, auth }) => {
           border: "2px solid",
           borderColor: "#00d5fa",
           borderRadius: "7px",
+          overflowY: "scroll",
         }}
       >
+        {loading && <LinearProgress />}
         <Table>
           <TableHead>
             <TableRow>
@@ -49,18 +62,7 @@ const TodoList = ({ todos, loading, auth }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading ? (
-              <Box
-                width="100%"
-                height="100vh"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <CircularProgress size={120} />
-              </Box>
-            ) : (
-              todos.length > 0 &&
+            {todos.length > 0 &&
               todos.map((todo, index) => (
                 <TableRow key={todo.id}>
                   <TableCell>{index + 1}</TableCell>
@@ -88,7 +90,7 @@ const TodoList = ({ todos, loading, auth }) => {
                       >
                         <Delete />
                       </IconButton>
-                      {auth.user && auth.user.role === "user" && (
+                      {
                         <Button
                           variant="contained"
                           startIcon={<Assignment />}
@@ -96,26 +98,27 @@ const TodoList = ({ todos, loading, auth }) => {
                         >
                           Assign
                         </Button>
-                      )}
+                      }
                     </Box>
                   </TableCell>
                   <EmailModal open={open} setOpen={setOpen} />
                 </TableRow>
-              ))
-            )}
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
       <Button
-        mar
         variant="contained"
         startIcon={<Assignment />}
-        onClick={() => openAddTodoModal(true)}
+        onClick={() => setOpenAddTodoModal(true)}
       >
-        Assign
+        ADD TODO
       </Button>
+      <AddTodoModal
+        setOpenAddTodoModal={setOpenAddTodoModal}
+        openAddTodoModal={openAddTodoModal}
+      />
     </Box>
   );
 };
-
 export default TodoList;
