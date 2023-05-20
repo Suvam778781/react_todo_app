@@ -69,6 +69,14 @@ const reducer = (state = intstate, action) => {
 
       case actionTypes.LOGIN_ERROR:return {...state, loading:false , userLogin:false ,AccFound:false ,error:true,loginToken:""}
 
+      //logout reducer;
+
+      case actionTypes.LOGOUT:
+      localStorage.removeItem("login_token")
+      localStorage.removeItem("user_email")
+      localStorage.removeItem("role")  
+      return {...state, userToken:"",userLogin:false }
+
     default:
       return state;
   }
