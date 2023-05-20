@@ -68,13 +68,17 @@ const Signup = () => {
       }}
     >
       {loading ? <LinearProgress /> : ""}
-      {!store.isUserAlreadyRegister ? (
-        <Typography variant="h4" align="center" mb={4}>
-          Signup
-        </Typography>
-      ) : (
-        <Alert severity="warning">Account-Already present please sign up</Alert>
-      )}
+
+      {
+       !store.isUserAlreadyRegister ? (
+          <Typography variant="h4" align="center" mb={4}>
+            Signup
+          </Typography>
+        ) : (
+          <Alert severity="warning">Account-Already present please sign up</Alert>
+        )
+        }
+      
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth margin="normal">
           <TextField
@@ -120,7 +124,7 @@ const Signup = () => {
             required
           />
         </FormControl>
-        <Button
+      <Button
           type="submit"
           variant="contained"
           color="primary"

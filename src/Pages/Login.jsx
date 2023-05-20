@@ -32,6 +32,8 @@ const Login = () => {
   const store = useSelector((store) => store.authReducer);
   const loading = store.loading;
 
+  console.log(store.wrongPass, "wrongpsassfds");
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -50,18 +52,16 @@ const Login = () => {
     dispatch(Login_FN(formData));
   };
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     if (store.userLogin) {
       localStorage.setItem("login_token", store.loginToken);
       localStorage.setItem("user_email", formData.email);
       navigate("/");
-    } 
+    }
   }, [store.userLogin, store.AccNotFound]);
 
   return (
-    
     <Box
       sx={{
         margin: "auto",
@@ -72,8 +72,8 @@ const Login = () => {
         padding: 4,
       }}
     >
-       {loading?<LinearProgress />:""}
-     
+      {loading ? <LinearProgress /> : ""}
+      {store.wrongPass ? <Alert severity={"error"}>{"Wrong Password Please try again"}</Alert> : ""}
       {!store.AccNotFound ? (
         <Typography variant="h4" align="center" mb={4}>
           Login
@@ -81,9 +81,11 @@ const Login = () => {
       ) : (
         <Alert severity={"error"}>{"No acc Found please Sign-Up"}</Alert>
       )}
-      {
-        store.userLogin?<Alert severity={"success"}>{"Login-Success"}</Alert>:""
-      }
+      {store.userLogin ? (
+        <Alert severity={"success"}>{"Login-Success"}</Alert>
+      ) : (
+        ""
+      )}
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth margin="normal">
           <TextField
