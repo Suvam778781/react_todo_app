@@ -1,21 +1,21 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Home from '../pages/Home'
-import Login from '../pages/Login'
-import Signup from '../pages/Signup'
-import Dashboard from '../pages/Dashboard'
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Home from "../Pages/Home";
+import Login from "../Pages/Login";
+import Signup from "../Pages/Signup";
+import Dashboard from "../Pages/Dashboard";
 
 const AllRoutes = () => {
   return (
     <>
       <Routes>
-          <Route path="/" element={<Home/>} />
-          <Route path="/login" element={<Login/>} />
-          <Route path="/signup" element={<Signup/>} />
-          <Route path="/dashboard" element={<Dashboard/>} />
-    </Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
     </>
-  )
-}
+  );
+};
 
-export default AllRoutes
+export default AllRoutes;
