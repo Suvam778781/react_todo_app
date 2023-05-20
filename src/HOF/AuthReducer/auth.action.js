@@ -166,10 +166,11 @@ const Login_FN = ({ email, password, userType }) => {
         }
       );
       data = await data.data;
+     
 
       if (data.message) {
-        console.log(data.token);
-
+       
+localStorage.setItem("role",data.role)
         dispatch(login_success(data.token));
       }
     } catch (error) {
