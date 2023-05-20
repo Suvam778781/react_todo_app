@@ -26,7 +26,7 @@ const TodoList = ({ todos, loading, auth }) => {
   const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
-  let role = JSON.parse(localStorage.getItem("role")) || "client";
+  let role = localStorage.getItem("role") || "client";
   const handleAssignTodo = () => {};
 
   const handleDeleteTodo = (id) => {
