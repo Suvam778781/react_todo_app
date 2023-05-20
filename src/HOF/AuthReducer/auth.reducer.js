@@ -1,55 +1,74 @@
-'use client';
-import {
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE,
-  REGISTER_REQUEST,
-  REGISTER_SUCCESS,
-  REGISTER_FAILURE,
-  LOGOUT,
-} from "./auth.actionTypes";
+import actionTypes from "./auth.actionTypes";
 
-const initialState = {
-  user:JSON.parse(localStorage.getItem("details"))||null,
+const intstate = {
   loading: false,
-  error: null,
+  error: false,
+  userRegister: false,
+  isUserAlreadyRegister: false,
+  userLogin:false,
+  AccNotFound:false,
+  loginToken:""
+
 };
 
-const authReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case LOGIN_REQUEST:
-    case REGISTER_REQUEST:
+const reducer = (state = intstate, action) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case actionTypes.REGISTER_REQUEST:
+      console.log("register req");
       return {
         ...state,
         loading: true,
-        error: null,
+        userRegister: false,
+        isUserAlreadyRegister: false,
       };
-    case LOGIN_SUCCESS:
-    case REGISTER_SUCCESS:
-      return {
-        ...state,
-        user: action.payload,
-        loading: false,
-        error: null,
-      };
-    case LOGIN_FAILURE:
-    case REGISTER_FAILURE:
+
+    case actionTypes.REGISTER_SUCCESS:
+      
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        userRegister: true,
+        isUserAlreadyRegister: false,
       };
-    case LOGOUT:
-      localStorage.removeItem("details")
+
+    case actionTypes.REGISTER_ALREADY:
+      
       return {
         ...state,
-        user: null,
         loading: false,
-        error: null,
+        isUserAlreadyRegister: true,
+       
       };
+
+    // case actionTypes.RESET_STATES:
+    //   return { ...state, isUserAlreadyRegister: false };
+
+    case actionTypes.REGISTER_FAILURE:
+     
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        isUserAlreadyRegister: false,
+        userRegister: false,
+      };
+
+      //login state reducer;
+      case actionTypes.LOGIN_REQ:return {...state,loading:true, userLogin:false, AccNotFound:false}
+
+      case actionTypes.LOGIN_SUCCESS:return {...state,loading:false, userLogin:true,AccFound:true, loginToken:payload}
+
+      case actionTypes.NO_ACC_FOUND:
+      console.log("login token")  
+      return {...state, loading:false ,AccNotFound:true,loginToken:"" }
+
+      case actionTypes.LOGIN_ERROR:return {...state, loading:false , userLogin:false ,AccFound:false ,error:true,loginToken:""}
+
     default:
       return state;
   }
 };
 
-export  {authReducer};
+export { reducer };
