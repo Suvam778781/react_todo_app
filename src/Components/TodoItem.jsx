@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Table,
   TableBody,
@@ -22,29 +22,32 @@ import {
   Select,
   InputLabel,
   MenuItem,
-} from '@mui/material';
-import { Assignment, Delete, Edit } from '@mui/icons-material';
-import {
-  deleteTodo,
-  updateTodo,
-} from '../HOF/TodoReducer/todo.action';
-import AddTodoModal from './AddTodoModal';
-import PieChart from './PieChart';
+} from "@mui/material";
+import { Assignment, Delete, Edit } from "@mui/icons-material";
+import { deleteTodo, updateTodo } from "../HOF/TodoReducer/todo.action";
+import AddTodoModal from "./AddTodoModal";
+import PieChart from "./PieChart";
+import EmailModal from "./AssignUserTodoToAnathorUser.jsx";
 
 const TodoList = () => {
   const todos = useSelector((state) => state.todoReducer.todos);
   const loading = useSelector((state) => state.todoReducer.loading);
   const auth = useSelector((state) => state.authReducer);
-console.log(todos)
+  console.log(todos);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openAddTodoModal, setOpenAddTodoModal] = useState(false);
   const [editTodo, setEditTodo] = useState(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
 
-  const handleAssignTodo = () => {};
+  const handleAssignTodo = (TodoID, email) => {
+    setOpen((prev)=>!prev)
+
+    // dispatch()
+  };
 
   const handleDeleteTodo = (id) => {
     dispatch(deleteTodo(id));
@@ -61,8 +64,8 @@ console.log(todos)
   const handleCloseEditModal = () => {
     setOpenEditModal(false);
     setEditTodo(null);
-    setTitle('');
-    setDescription('');
+    setTitle("");
+    setDescription("");
     setStatus(0);
   };
 
@@ -77,14 +80,14 @@ console.log(todos)
     dispatch(updateTodo(updatedTodo.id, updatedTodo));
     setOpenEditModal(false);
     setEditTodo(null);
-    setTitle('');
-    setDescription('');
+    setTitle("");
+    setDescription("");
     setStatus(0);
   };
 
-    const topics = todos.map((x) => x.status); 
-console.log(topics)
-const topicCounts = {};
+  const topics = todos.map((x) => x.status);
+  console.log(topics);
+  const topicCounts = {};
   topics?.forEach((t) => {
     if (topicCounts[t]) topicCounts[t]++;
     else topicCounts[t] = 1;
@@ -99,15 +102,15 @@ const topicCounts = {};
       </Typography>
       <TableContainer
         style={{
-          height: '400px',
+          height: "400px",
           maxWidth: 800,
-          margin: 'auto',
-          marginTop: '140px',
+          margin: "auto",
+          marginTop: "140px",
           p: 4,
-          border: '2px solid',
-          borderColor: '#00d5fa',
-          borderRadius: '7px',
-          overflowY: 'scroll',
+          border: "2px solid",
+          borderColor: "#00d5fa",
+          borderRadius: "7px",
+          overflowY: "scroll",
         }}
       >
         {loading && <LinearProgress />}
@@ -129,7 +132,7 @@ const topicCounts = {};
                   <TableCell>{todo.title}</TableCell>
                   <TableCell>{todo.description}</TableCell>
                   <TableCell>
-                    {todo.status === 0 ? 'Pending' : 'Completed'}
+                    {todo.status === 0 ? "Pending" : "Completed"}
                   </TableCell>
                   <TableCell width="40%" align="center">
                     <Box display="flex" justifyContent="space-between">
@@ -160,7 +163,7 @@ const topicCounts = {};
         </Table>
       </TableContainer>
       <Button
-       style={{marginTop:"20px"}}
+        style={{ marginTop: "20px" }}
         variant="contained"
         startIcon={<Assignment />}
         onClick={() => setOpenAddTodoModal(true)}
@@ -210,9 +213,14 @@ const topicCounts = {};
         </DialogActions>
       </Dialog>
 
-<AddTodoModal setOpenAddTodoModal={setOpenAddTodoModal} openAddTodoModal={openAddTodoModal}/>
-<PieChart  values={PieValues} lebels={PieLabels} />
+      <AddTodoModal
+        setOpenAddTodoModal={setOpenAddTodoModal}
+        openAddTodoModal={openAddTodoModal}
+      />
+      <PieChart values={PieValues} lebels={PieLabels} />
+      <EmailModal  open={open} setOpen={setOpen} handleAssignTodo={handleAssignTodo} />
     </Box>
+    
   );
 };
 

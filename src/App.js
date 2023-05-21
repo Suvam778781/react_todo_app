@@ -9,18 +9,17 @@ import { useCallback, useState } from "react";
 function App() {
   const location = useLocation();
   console.log(location);
-  const [text, setText] = useState("");
 
-  const queryHandeler = useCallback((val) => {
-    setText(val);
-  }, []);
 
-  console.log(text,"check");
+ 
   return (
     <div className="App">
-      {(location.pathname=="/"||"/dashboard")&&<Navbar/>}
-    <AllRoutes/>
-      {/* <AllRoutes /> */}
+
+      {location.pathname === '/' || location.pathname === '/dashboard' ? (
+        <Navbar />
+      ) : null}
+      <AllRoutes />
+
     </div>
   );
 }

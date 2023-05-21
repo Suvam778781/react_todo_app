@@ -18,6 +18,7 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import {useNavigate} from "react-router-dom"
   import { useEffect, useState } from "react";
+  import { logout_FN } from "../HOF/AuthReducer/auth.action";
   const Navbar = () => {
     const auth=useSelector((store)=>store.authReducer)
     let role=localStorage.getItem("role")
@@ -26,6 +27,8 @@ import {
     const navigate=useNavigate()
   const handleLogout=()=>{
 //   dispatch(logoutUser())
+dispatch(logout_FN())
+navigate('/login')
   }  
 
 
