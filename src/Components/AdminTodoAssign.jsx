@@ -50,33 +50,73 @@ export default function AsminAssignTodo({ queryHandeler }) {
     console.log("change");
   }, [input, queryHandeler]);
 
-  console.log(suggestion, "suggestion");
   const handelSetValue = (elm) => {
     setBool(true);
     setClickSugge(elm);
-    console.log(bool,clickSugg,"click");
+  };
+
+  console.log(bool, "bool value");
+
+  const handelClear = () => {
+    setBool(false);
   };
 
   return (
     <>
-      <input
-        placeholder={bool ? clickSugg : "enter Email"}
-        value={bool?clickSugg:input}
-        onChange={handelInputChange}
-      />
-     { !bool?  <div>
-      {suggestion.map((elm, i) => {
-        return (
-          <div
-            style={{ border: "1px solid red", width: "20%", margin: "auto" }}
-            key={i + 1}
-            onClick={() => handelSetValue(elm)}
-          >
-            <h6>{elm}</h6>
-          </div>
-        );
-      })}
-      </div>:null}
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          margin: "auto",
+          border: "1px solid red",
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
+        <input value={bool ? clickSugg : input} onChange={handelInputChange} />
+        {bool ? (
+          <>
+            <button onClick={handelClear}>clear</button>
+          </>
+        ) : (
+          ""
+        )}
+      </div>
+      {!bool ? (
+        <div
+          style={{
+            height: "10%",
+            border: "1px solid black",
+          }}
+        >
+          {suggestion.map((elm, i) => {
+            return (
+              <div
+                style={{
+                  border: "1px solid red",
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "10%",
+                  alignContent: "center",
+                  justifyContent: "center",
+                  margin: "auto",
+                }}
+                key={i + 1}
+                onClick={() => handelSetValue(elm)}
+              >
+                <h6
+                  style={{
+                    fontSize: "80%",
+                    fontFamily: "cursive",
+                  }}
+                >
+                  {elm}
+                </h6>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
     </>
   );
 }
