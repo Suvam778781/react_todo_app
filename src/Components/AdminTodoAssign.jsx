@@ -8,20 +8,43 @@ export default function AsminAssignTodo({ queryHandeler }) {
   const [suggestion, setSuggestion] = useState([]);
   const [bool, setBool] = useState(false);
   const [clickSugg, setClickSugge] = useState("");
-  const getData = () => {
-    return axios.get("http://localhost:8090/user/alluser", {
+  const getData = async () => {
+    const email=JSON.stringify(localStorage.getItem("user_email"))
+    const token=JSON.stringify(localStorage.getItem("user_token"))
+    try{
+    const res= await fetch("http://localhost:8090/user/usertouser", {
       headers: {
-        email: "client01@gmail.com",
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTY4NDYxMDkzMDY0MF9ma3YzeGsiLCJpYXQiOjE2ODQ2NDU1ODd9.VkDDH8yP9kSI46l8Zu7Mgxy5PEMgHnpZQEy0eIWNGe0",
-      },
-    });
+        email: "user02@gmail.com",
+        Authorization:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdfaWQiOiIxNjg0NjEwOTMwNjQwX2ZrdjN4ayIsImlhdCI6MTY4NDY2ODY4MH0.gih7U0DD2VjYeeU9RsSclEZFfX3GwhOGwqIMSD-YuLI"
+      }
+    })
+
+
+
+    const data=await res.json()
+    setData(data)
+    console.log(data)
+  }
+  catch(error){
+     // Handle the error
+     if (error.response) {
+      // The request was made and the server responded with a status code
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+  };
   };
 
   useEffect(() => {
-    getData().then((res) => {
-      setData(res.data);
-    });
+    getData()
   }, []);
 
   const handelInputChange = (e) => {

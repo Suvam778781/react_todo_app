@@ -170,23 +170,27 @@ export const updateTodo = (id, updatedTodo) => {
 };
 
 export const assignTodoToUser = (todoId, mail) => {
+
+  console.log(todoId,mail)
   return async (dispatch) => {
     dispatch({ type: ASSIGN_TODO_TO_USER_REQUEST });
     const email = localStorage.getItem("user_email");
     const token = localStorage.getItem("login_token");
-    const role = localStorage.getItem("role") || "client";
+    const role = localStorage.getItem("role")
 
     try {
       // Make API call to assign todo to user
       let response = await fetch(
-        `${process.env.REACT_APP_LOCAL}/user/assignto/${todoId}`,
+        `${"http://localhost:8090"}/user/assignto/${todoId}`,
         {
           method: "PATCH",
           headers: {
+            "Content-Type":"application/json",
             Authorization: token,
-            Email: email,
-            exemail: mail,
+            Email: email
           },
+        
+          body:JSON.stringify({email:mail})
         }
       );
 
@@ -197,9 +201,9 @@ export const assignTodoToUser = (todoId, mail) => {
         dispatch({ type: ASSIGN_TODO_TO_USER_SUCCESS, payload: todoId });
       } else if (data.error) {
         alert(data.error);
-        dispatch({ type: ASSIGN_TODO_TO_USER_FAILURE, payload: data.message });
+        dispatch({ type: ASSIGN_TODO_TO_USER_FAILURE, payload: data.error });
       }
-    } catch (error) {
+    } catch (error) { 
       dispatch({ type: ASSIGN_TODO_TO_USER_FAILURE, payload: error.message });
     }
   };
