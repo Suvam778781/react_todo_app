@@ -132,7 +132,8 @@ let role=localStorage.getItem("role")
                   <TableCell>{todo.id}</TableCell>
                   <TableCell>{todo.title}</TableCell>
                   <TableCell>{todo.description}</TableCell>
-                  <TableCell>
+                  
+                  <TableCell style={{color:todo.status==0?"red":"green",fontWeight:600}}>
                     {todo.status === 0 ? "Pending" : "Completed"}
                   </TableCell>
                   <TableCell width="40%" align="center">
@@ -149,13 +150,14 @@ let role=localStorage.getItem("role")
                       >
                         <Delete />
                       </IconButton>
-                      <Button
+                       
+                      {role=="user"&&<Button
                         variant="contained"
                         startIcon={<Assignment />}
                         onClick={() => handleAssignTodo(todo.id)}
                       >
                         Assign
-                      </Button>
+                      </Button>}
                     </Box>
                   </TableCell>
                 </TableRow>
