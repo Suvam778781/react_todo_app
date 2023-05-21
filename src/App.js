@@ -11,13 +11,15 @@ function App() {
   console.log(location);
 
 
-  console.log(location.pathname, "checkasddadasdasdasd");
+ 
   return (
     <div className="App">
+
       {location.pathname === '/' || location.pathname === '/dashboard' ? (
         <Navbar />
       ) : null}
       <AllRoutes />
+
     </div>
   );
 }

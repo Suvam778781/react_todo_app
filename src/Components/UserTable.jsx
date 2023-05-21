@@ -23,10 +23,13 @@ import {
   deleteUser,
   fetchUsers,
 } from "../HOF/UserReducer/user.action";
+import AssignTodoToUser from "./AssignTodoToUser";
 
 const UserTable = () => {
   const [editModal, setEditModal] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
+  const [asigneuser,setAssigneuser]=useState({});
+  const[asignModal,setAsignModal]=useState(false);
   const dispatch = useDispatch();
   const users = useSelector((store) => store.userReducer.users);
   const user = useSelector((store) => store.userReducer);
@@ -53,7 +56,10 @@ const UserTable = () => {
   const handleDelete = (id) => {
     dispatch(deleteUser(id));
   };
-  const handleAssignTodo = () => {};
+  const handleAssignTodo = (user) => {
+setAssigneuser(user)
+setAsignModal(true)
+  };
 
   return (
     <Box sx={{ height: "85vh", overflowY: "auto" }}>
@@ -77,7 +83,7 @@ const UserTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {users.length>0&&users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.id}</TableCell>
                 <TableCell>{user.firstname}</TableCell>
@@ -104,7 +110,7 @@ const UserTable = () => {
                   <Button
                     variant="contained"
                     startIcon={<Assignment />}
-                    onClick={() => handleAssignTodo()}
+                    onClick={() => handleAssignTodo(user)}
                   >
                     Assign
                   </Button>
@@ -217,6 +223,9 @@ const UserTable = () => {
           </Box>
         </Box>
       </Modal>
+
+<AssignTodoToUser asignModal={asignModal}setAsignModal={setAsignModal} email={asigneuser.email} firstname={asigneuser.firstname}/>
+
     </Box>
   );
 };
