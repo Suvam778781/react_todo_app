@@ -6,6 +6,7 @@ import {
     MenuItem,
     FormControl,
     Button,
+    Box
   } from "@mui/material";
   
   import {
@@ -14,29 +15,24 @@ import {
     Notifications,
   } from "@mui/icons-material";
   
-  import FlexBetween from "./FlexBetween";
   import { useDispatch, useSelector } from "react-redux";
-  
-  import { useRouter } from "next/router";
+  import {useNavigate} from "react-router-dom"
   import { useEffect, useState } from "react";
-  import { logoutUser } from "@/utils/redux-arch/authreducer/action";
-  
   const Navbar = () => {
-    const auth=useSelector((store)=>store.authreducer)
-    const [userEmail, setUserEmail] = useState("");
+    const auth=useSelector((store)=>store.authReducer)
     let role=localStorage.getItem("role")
     let user_email=localStorage.getItem("user_email")
     const dispatch=useDispatch()
-    const router=useRouter()
+    const navigate=useNavigate()
   const handleLogout=()=>{
-  dispatch(logoutUser())
+//   dispatch(logoutUser())
   }  
 
 
 
     return (
-      <FlexBetween padding="1rem 6%" backgroundColor="#FFFFFF">
-        <FlexBetween gap="1.75rem">
+      <Box display={"flex"} justifyContent={"space-between"}  padding="20px" boxShadow={"rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"} backgroundColor="#FFFFFF">
+        <Box  gap="1.75rem" display={"flex"} justifyContent={"space-between"} >
           <Typography
             fontWeight="bold"
             fontSize="clamp(1rem, 2rem, 2.25rem)"
@@ -46,13 +42,16 @@ import {
                 cursor: "pointer",
               },
             }}
+            onClick={()=>navigate("/")}
+            
           >
+
   
             ToDo App
           </Typography>
-        </FlexBetween>
+        </Box>
   
-        <FlexBetween gap="2rem">
+        <Box gap="2rem">
         <Button
         
             fontWeight="bold"
@@ -63,15 +62,16 @@ import {
                 cursor: "pointer",
               },
             }}
+            onClick={()=>navigate("/dashboard")}
           >
             Dashboard
           </Button>
-          <FormControl variant="standard" value={userEmail}>
+          <FormControl variant="standard" >
             <Select
-              value={userEmail}
+              value={user_email}
               sx={{
                 backgroundColor: "#ccf7fe",
-                width: "150px",
+                width: "auto",
                 borderRadius: "0.25rem",
                 p: "0.25rem 1rem",
                 "& .MuiSvgIcon-root": {
@@ -84,14 +84,14 @@ import {
               }}
             
             >
-              <MenuItem value={userEmail}>
-                <Typography>{userEmail}</Typography>
+              <MenuItem value={user_email}>
+                <Typography>{user_email}</Typography>
               </MenuItem>
               <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </Select>
           </FormControl>
-        </FlexBetween>
-      </FlexBetween>
+        </Box>
+      </Box>
     );
   };
   

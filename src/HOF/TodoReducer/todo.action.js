@@ -24,15 +24,14 @@ export const fetchTodos = (page = 1, limit = 10) => {
     dispatch({ type: FETCH_TODOS_REQUEST });
     let url;
     try {
-      let email = localStorage.getItem("user_email");
-      let token = localStorage.getItem("login_token");
-      let role = localStorage.getItem("role") || "client";
+      const email = localStorage.getItem("user_email");
+      const token = localStorage.getItem("login_token");
+      const role = localStorage.getItem("role")
       if (role == "user") {
         url = "todo/useralltodo";
       } else {
         url = "todo/alltodo";
       }
-
       const response = await fetch(
         `${"http://localhost:8090"}/${url}?limit=${limit}&page=${page}`,
         {
@@ -45,7 +44,7 @@ export const fetchTodos = (page = 1, limit = 10) => {
       );
       const data = await response.json();
       console.log(data);
-      if (data) {
+      if (!data.error) {
         dispatch({ type: FETCH_TODOS_SUCCESS, payload: data });
       } else {
         dispatch({ type: FETCH_TODOS_FAILURE, error: "Failed to fetch todos" });
@@ -63,9 +62,9 @@ export const addTodo = (todo) => {
     dispatch({ type: ADD_TODO_REQUEST });
 
     try {
-      let email = localStorage.getItem("user_email");
-      let token = localStorage.getItem("login_token");
-      let role = localStorage.getItem("role") || "client";
+      const email = localStorage.getItem("user_email");
+      const token = localStorage.getItem("login_token");
+      const role = localStorage.getItem("role")
       let url;
       if (role == "user") {
         url = "todo/useraddtodo";
@@ -82,9 +81,8 @@ export const addTodo = (todo) => {
         body: JSON.stringify(todo),
       });
       const data = await response.json();
-      console.log(response, data);
       if (data.message) {
-        dispatch({ type: ADD_TODO_SUCCESS, payload: todo });
+        dispatch({ type: ADD_TODO_SUCCESS, payload: data.todo });
       } else {
         dispatch({ type: ADD_TODO_FAILURE, error: "Failed to add todo" });
       }
@@ -100,9 +98,9 @@ export const deleteTodo = (id) => {
     dispatch({ type: DELETE_TODO_REQUEST });
 
     try {
-      let email = localStorage.getItem("user_email");
-      let token = localStorage.getItem("login_token");
-      let role = localStorage.getItem("role") || "client";
+      const email = localStorage.getItem("user_email");
+      const token = localStorage.getItem("login_token");
+      const role = localStorage.getItem("role")
       let url;
       if (role == "user") {
         url = "todo/userdeletetodo";
@@ -136,9 +134,9 @@ export const updateTodo = (id, updatedTodo) => {
     dispatch({ type: UPDATE_TODO_REQUEST });
     let url;
     try {
-      let email = localStorage.getItem("user_email");
-      let token = localStorage.getItem("login_token");
-      let role = localStorage.getItem("role") || "client";
+      const email = localStorage.getItem("user_email");
+      const token = localStorage.getItem("login_token");
+      const role = localStorage.getItem("role")
       if (role == "user") {
         url = "todo/userupdatetodo";
       } else {
@@ -160,7 +158,7 @@ export const updateTodo = (id, updatedTodo) => {
       const data = await response.json();
       console.log(data);
       if (data.message) {
-        dispatch({ type: UPDATE_TODO_SUCCESS, payload: updatedTodo });
+        dispatch({ type: UPDATE_TODO_SUCCESS, payload: data.todo });
       } else {
         dispatch({ type: UPDATE_TODO_FAILURE, error: "Failed to update todo" });
       }
@@ -174,9 +172,9 @@ export const updateTodo = (id, updatedTodo) => {
 export const assignTodoToUser = (todoId, mail) => {
   return async (dispatch) => {
     dispatch({ type: ASSIGN_TODO_TO_USER_REQUEST });
-    let email = localStorage.getItem("user_email");
-    let token = localStorage.getItem("login_token");
-    let role = localStorage.getItem("role") || "client";
+    const email = localStorage.getItem("user_email");
+    const token = localStorage.getItem("login_token");
+    const role = localStorage.getItem("role") || "client";
 
     try {
       // Make API call to assign todo to user

@@ -20,15 +20,17 @@ export const fetchUsers = () => {
   return async (dispatch) => {
     dispatch({ type: FETCH_USERS_REQUEST });
     try {
-      const details = JSON.parse(localStorage.getItem("details"));
+       let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role")
 
       // Make API call to fetch users
-      const users = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/alluser`, {
+      const users = await fetch(`${"http://localhost:8090"}/user/alluser`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: details.token,
-          Email: details.email,
+          Authorization: token,
+          Email: email,
         },
       });
       const data = await users.json();
@@ -46,18 +48,20 @@ export const fetchUsers = () => {
 // Assign todo to user action
 export const assignTodoToUser = (email, todo) => {
   return async (dispatch) => {
-    const details = JSON.parse(localStorage.getItem("details"));
+     let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role")
     try {
       // Make API call to assign todo to user
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/client/assigntodo`,
+        `${"http://localhost:8090"}/client/assigntodo`,
         {
         method:"POST",
 
         headers: {
           "Content-Type": "application/json",
-          Authorization: details.token,
-          Email: details.email,
+          Authorization: token,
+          Email: email,
           specific_user_email:email
         },
       body:JSON.stringify(todo)
@@ -85,16 +89,18 @@ export const assignTodoToUser = (email, todo) => {
 export const addUser = (user) => {
   return async (dispatch) => {
     dispatch({ type: ADD_USER_REQUEST });
-    const details = JSON.parse(localStorage.getItem("details"));
+     let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role")
     try {
       // Make API call to add user
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/adduser`, {
+      const response = await fetch(`${"http://localhost:8090"}/user/adduser`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
           "Content-Type": "application/json",
-          Authorization: details.token,
-          Email: details.email,
+          Authorization: token,
+          Email: email,
         },
       });
       const data = await response.json();
@@ -121,17 +127,19 @@ export const addUser = (user) => {
 export const updateUser = (userId, updatedUser) => {
   return async (dispatch) => {
     dispatch({ type: UPDATE_USER_REQUEST });
-    const details = JSON.parse(localStorage.getItem("details"));
+     let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role")
     try {
       // Make API call to update user
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/user/updateuser/${userId}`,
+        `${"http://localhost:8090"}/user/updateuser/${userId}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: details.token,
-            Email: details.email,
+            Authorization: token,
+            Email: email,
           },
           body: JSON.stringify(updatedUser),
         }
@@ -157,16 +165,18 @@ export const deleteUser = (userId) => {
 
   
     try {
-      const details = JSON.parse(localStorage.getItem("details"));
+       let email = localStorage.getItem("user_email");
+      let token = localStorage.getItem("login_token");
+      let role = localStorage.getItem("role")
       // Make API call to delete user
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/user/deleteuser/${userId}`,
+        `${"http://localhost:8090"}/user/deleteuser/${userId}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: details.token,
-            Email: details.email,
+            Authorization: token,
+            Email: email,
           },
         }
       );

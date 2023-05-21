@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Table,
   TableBody,
@@ -12,42 +13,101 @@ import {
   Box,
   Button,
   LinearProgress,
-} from "@mui/material";
-import { Assignment, Delete, Edit } from "@mui/icons-material";
-import EmailModal from "./AssignUserTodoToAnathorUser.jsx";
-import EditTodoModal from "./EditTodoModal";
-import AddTodoModal from "./AddTodoModal.jsx";
-import { useDispatch } from "react-redux";
-import { deleteTodo } from "../HOF/TodoReducer/todo.action.js";
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  TextField,
+  Select,
+  InputLabel,
+  MenuItem,
+} from '@mui/material';
+import { Assignment, Delete, Edit } from '@mui/icons-material';
+import {
+  deleteTodo,
+  updateTodo,
+} from '../HOF/TodoReducer/todo.action';
+import AddTodoModal from './AddTodoModal';
+import PieChart from './PieChart';
 
-const TodoList = ({ todos, loading, auth }) => {
+const TodoList = () => {
+  const todos = useSelector((state) => state.todoReducer.todos);
+  const loading = useSelector((state) => state.todoReducer.loading);
+  const auth = useSelector((state) => state.authReducer);
+console.log(todos)
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openAddTodoModal, setOpenAddTodoModal] = useState(false);
-  const [open, setOpen] = useState(false);
-
+  const [editTodo, setEditTodo] = useState(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
-  let role = localStorage.getItem("role") || "client";
+
   const handleAssignTodo = () => {};
 
   const handleDeleteTodo = (id) => {
     dispatch(deleteTodo(id));
   };
+
+  const handleOpenEditModal = (todo) => {
+    setEditTodo(todo);
+    setTitle(todo.title);
+    setDescription(todo.description);
+    setStatus(todo.status);
+    setOpenEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false);
+    setEditTodo(null);
+    setTitle('');
+    setDescription('');
+    setStatus(0);
+  };
+
+  const handleUpdateTodo = () => {
+    const updatedTodo = {
+      id: editTodo.id,
+      title,
+      description,
+      status,
+    };
+
+    dispatch(updateTodo(updatedTodo.id, updatedTodo));
+    setOpenEditModal(false);
+    setEditTodo(null);
+    setTitle('');
+    setDescription('');
+    setStatus(0);
+  };
+
+    const topics = todos.map((x) => x.status); 
+console.log(topics)
+const topicCounts = {};
+  topics?.forEach((t) => {
+    if (topicCounts[t]) topicCounts[t]++;
+    else topicCounts[t] = 1;
+  });
+  const PieLabels = Object.keys(topicCounts);
+  const PieValues = Object.values(topicCounts);
+
   return (
     <Box>
-      <Typography fontSize={"70px"} color={"grey"} margin={"22px"}>
-        {role} Table
+      <Typography fontSize="70px" color="grey" margin="22px">
+        {auth.role} Table
       </Typography>
       <TableContainer
         style={{
-          height: "400px",
+          height: '400px',
           maxWidth: 800,
-          margin: "auto",
-          marginTop: "140px",
+          margin: 'auto',
+          marginTop: '140px',
           p: 4,
-          border: "2px solid",
-          borderColor: "#00d5fa",
-          borderRadius: "7px",
-          overflowY: "scroll",
+          border: '2px solid',
+          borderColor: '#00d5fa',
+          borderRadius: '7px',
+          overflowY: 'scroll',
         }}
       >
         {loading && <LinearProgress />}
@@ -63,62 +123,97 @@ const TodoList = ({ todos, loading, auth }) => {
           </TableHead>
           <TableBody>
             {todos.length > 0 &&
-              todos.map((todo, index) => (
+              todos.map((todo) => (
                 <TableRow key={todo.id}>
-                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{todo.id}</TableCell>
                   <TableCell>{todo.title}</TableCell>
                   <TableCell>{todo.description}</TableCell>
                   <TableCell>
-                    {todo.status === 0 ? "Pending" : "Completed"}
+                    {todo.status === 0 ? 'Pending' : 'Completed'}
                   </TableCell>
                   <TableCell width="40%" align="center">
                     <Box display="flex" justifyContent="space-between">
                       <IconButton
                         aria-label="edit"
-                        onClick={() => setOpenEditModal(true)}
+                        onClick={() => handleOpenEditModal(todo)}
                       >
                         <Edit />
                       </IconButton>
-                      <EditTodoModal
-                        setOpenEditModal={setOpenEditModal}
-                        openEditModal={openEditModal}
-                        todo={todo}
-                      />
                       <IconButton
                         aria-label="delete"
                         onClick={() => handleDeleteTodo(todo.id)}
                       >
                         <Delete />
                       </IconButton>
-                      {
-                        <Button
-                          variant="contained"
-                          startIcon={<Assignment />}
-                          onClick={() => handleAssignTodo()}
-                        >
-                          Assign
-                        </Button>
-                      }
+                      <Button
+                        variant="contained"
+                        startIcon={<Assignment />}
+                        onClick={() => handleAssignTodo()}
+                      >
+                        Assign
+                      </Button>
                     </Box>
                   </TableCell>
-                  <EmailModal open={open} setOpen={setOpen} />
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </TableContainer>
       <Button
+       style={{marginTop:"20px"}}
         variant="contained"
         startIcon={<Assignment />}
         onClick={() => setOpenAddTodoModal(true)}
       >
         ADD TODO
       </Button>
-      <AddTodoModal
-        setOpenAddTodoModal={setOpenAddTodoModal}
-        openAddTodoModal={openAddTodoModal}
-      />
+      <Dialog open={openEditModal} onClose={handleCloseEditModal}>
+        <DialogTitle>Edit Todo</DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              label="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              label="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              required
+            >
+              <MenuItem value={0}>Pending</MenuItem>
+              <MenuItem value={1}>Completed</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditModal}>Cancel</Button>
+          <Button
+            onClick={handleUpdateTodo}
+            color="primary"
+            variant="contained"
+          >
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+<AddTodoModal setOpenAddTodoModal={setOpenAddTodoModal} openAddTodoModal={openAddTodoModal}/>
+<PieChart  values={PieValues} lebels={PieLabels} />
     </Box>
   );
 };
+
 export default TodoList;
