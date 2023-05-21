@@ -20,7 +20,7 @@ function App() {
     <div className="App">
       {(location.pathname=="/"||"/dashboard")&&<Navbar/>}
     <AllRoutes/>
-      <AllRoutes />
+      {/* <AllRoutes /> */}
     </div>
   );
 }
