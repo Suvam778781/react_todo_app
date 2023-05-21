@@ -1,3 +1,5 @@
+import { Box, Button, TextField } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import axios from "axios";
 import { useEffect, useState } from "react";
 export default function AsminAssignTodo({ queryHandeler }) {
@@ -61,62 +63,71 @@ export default function AsminAssignTodo({ queryHandeler }) {
     setBool(false);
   };
 
+  //styles
+
+  const useStyles = makeStyles((theme) => ({
+    container: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: theme.spacing(2),
+    },
+    input: {
+      marginRight: theme.spacing(2),
+    },
+    clearButton: {
+      textTransform: "none",
+    },
+    suggestionContainer: {
+      maxHeight: "150px",
+      overflowY: "scroll",
+      marginTop: theme.spacing(2),
+    },
+    suggestionItem: {
+      cursor: "pointer",
+      marginBottom: theme.spacing(2),
+      padding: theme.spacing(1),
+      backgroundColor: theme.palette.background.default,
+      borderRadius: theme.shape.borderRadius,
+      "&:hover": {
+        backgroundColor: theme.palette.grey[200],
+      },
+    },
+  }));
+
+  const classes = useStyles();
+
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          margin: "auto",
-          border: "1px solid red",
-          justifyContent: "center",
-          alignContent: "center",
-        }}
-      >
-        <input value={bool ? clickSugg : input} onChange={handelInputChange} />
-        {bool ? (
-          <>
-            <button onClick={handelClear}>clear</button>
-          </>
-        ) : (
-          ""
+      <Box className={classes.container}>
+        <TextField
+          value={bool ? clickSugg : input}
+          onChange={handelInputChange}
+          className={classes.input}
+        />
+        {bool && (
+          <Button
+            variant="outlined"
+            onClick={handelClear}
+            className={classes.clearButton}
+          >
+            Clear
+          </Button>
         )}
-      </div>
-      {!bool ? (
-        <div
-          style={{
-            height: "10%",
-            border: "1px solid black",
-          }}
-        >
-          {suggestion.map((elm, i) => {
-            return (
-              <div
-                style={{
-                  border: "1px solid red",
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "10%",
-                  alignContent: "center",
-                  justifyContent: "center",
-                  margin: "auto",
-                }}
-                key={i + 1}
-                onClick={() => handelSetValue(elm)}
-              >
-                <h6
-                  style={{
-                    fontSize: "80%",
-                    fontFamily: "cursive",
-                  }}
-                >
-                  {elm}
-                </h6>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
+      </Box>
+      {!bool && (
+        <Box className={classes.suggestionContainer}>
+          {suggestion.map((elm, i) => (
+            <Box
+              key={i + 1}
+              onClick={() => handelSetValue(elm)}
+              className={classes.suggestionItem}
+            >
+              <h6>{elm}</h6>
+            </Box>
+          ))}
+        </Box>
+      )}
     </>
   );
 }

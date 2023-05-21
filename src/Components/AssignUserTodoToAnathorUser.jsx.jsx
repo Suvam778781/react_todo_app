@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,10 +7,12 @@ import {
   FormControl,
   TextField,
   Button,
-} from '@mui/material';
+} from "@mui/material";
+import AsminAssignTodo from "./AdminTodoAssign";
 
 const EmailModal = ({ open, setOpen, handleAssignTodo }) => {
-  const [userEmail, setUserEmail] = useState('');
+  const [userEmail, setUserEmail] = useState("");
+  const [text, setText] = useState("");
 
   const handleUserEmailChange = (e) => {
     setUserEmail(e.target.value);
@@ -18,29 +20,35 @@ const EmailModal = ({ open, setOpen, handleAssignTodo }) => {
 
   const handleAssignTodoClick = () => {
     // handleAssignTodo(userEmail);
-    setOpen(false);
+    //setOpen(false);
+    console.log(text);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const queryHandeler = useCallback((val) => {
+    setText(val);
+    console.log(text);
+  }, [text]);
+
+
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Assign Todo</DialogTitle>
       <DialogContent>
         <FormControl fullWidth margin="normal">
-          <TextField
-            label="User Email"
-            value={userEmail}
-            onChange={handleUserEmailChange}
-            required
-          />
+          <AsminAssignTodo queryHandeler={queryHandeler} />
         </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleAssignTodoClick} color="primary" variant="contained">
+        <Button
+          onClick={handleAssignTodoClick}
+          color="primary"
+          variant="contained"
+        >
           Assign
         </Button>
       </DialogActions>

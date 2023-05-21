@@ -185,5 +185,8 @@ localStorage.setItem("role",data.role)
     }
   };
 };
+const logout_FN=()=>{
+  return {type:actionTypes.LOGOUT}
+}
 
-export { Register_FN, Login_FN };
+export { Register_FN, Login_FN,logout_FN };
