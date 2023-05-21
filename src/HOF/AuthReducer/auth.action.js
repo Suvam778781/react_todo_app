@@ -107,7 +107,7 @@ const Register_FN = ({ firstname, lastname, email, password }) => {
     dispatch(userRegisterReq());
 
     try {
-      let data = await axios.post(`${process.env.REACT_APP_LOCAL}client/register`, {
+      let data = await axios.post(`https://ill-cyan-cricket-cap.cyclic.app/client/register`, {
         firstname,
         lastname,
         email,
