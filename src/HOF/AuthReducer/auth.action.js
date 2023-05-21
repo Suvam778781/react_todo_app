@@ -158,7 +158,7 @@ const Login_FN = ({ email, password, userType }) => {
       const switchUrl = userType === "user" ? "user/login" : "client/login";
 
       let data = await axios.post(
-        `${process.env.REACT_APP_LOCAL}${switchUrl}`,
+        `https://ill-cyan-cricket-cap.cyclic.app/${switchUrl}`,
         {
           email,
           password,
