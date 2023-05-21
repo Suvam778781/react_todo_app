@@ -1,3 +1,4 @@
+import { UPDATE_TODO_FAILURE } from "../TodoReducer/todo.actionTypes";
 import {
   FETCH_USERS_REQUEST,
   FETCH_USERS_SUCCESS,
@@ -183,12 +184,12 @@ export const deleteUser = (userId) => {
       const data = await response.json();
       console.log(data);
       if (data.message) {
-        dispatch({ type: DELETE_USER_SUC, payload: userId });
+        dispatch({ type: DELETE_USER_SUCCESS, payload: userId });
       } else {
-        dispatch({ type: DELETE_USER_FAIL, payload: data.error });
+        dispatch({ type: DELETE_USER_FAILURE, payload: data.error });
       }
     } catch (error) {
-      dispatch({ type: DELETE_USER_FAIL, payload: error.message });
+      dispatch({ type: DELETE_USER_FAILURE, payload: error.message });
     }
   };
 };

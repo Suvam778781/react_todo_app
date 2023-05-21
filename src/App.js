@@ -9,7 +9,7 @@ function App() {
   console.log(location)
   return (
     <div className="App">
-      {location.pathname=="/"&&<Navbar/>}
+      {(location.pathname=="/"||"/dashboard")&&<Navbar/>}
     <AllRoutes/>
     </div>
   );
