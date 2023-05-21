@@ -63,7 +63,7 @@ export default function AsminAssignTodo({ queryHandeler }) {
     } else {
       let formatTextQ = input.trim().toLowerCase();
       console.log(formatTextQ);
-      let newSuggestion = data
+      let newSuggestion = data.length>0&&data
         .filter((elm) => {
           return elm.email.toLowerCase().indexOf(formatTextQ) !== -1
             ? true
