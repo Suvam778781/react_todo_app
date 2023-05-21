@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 export default function AsminAssignTodo({ queryHandeler }) {
   const [data, setData] = useState([]);
   const [input, setInput] = useState("");
@@ -25,12 +25,14 @@ export default function AsminAssignTodo({ queryHandeler }) {
   }, []);
 
   const handelInputChange = (e) => {
+    const {name,value}=e.target;
     setInput(e.target.value);
+    
   };
 
   useEffect(() => {
-    queryHandeler(input);
-  }, [input, queryHandeler]);
+    queryHandeler(input,clickSugg);
+  }, [input, queryHandeler,clickSugg]);
 
   useEffect(() => {
     if (input === "") {
@@ -55,9 +57,12 @@ export default function AsminAssignTodo({ queryHandeler }) {
   const handelSetValue = (elm) => {
     setBool(true);
     setClickSugge(elm);
+    console.log(input,"input");
   };
 
-  console.log(bool, "bool value");
+
+
+
 
   const handelClear = () => {
     setBool(false);
