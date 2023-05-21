@@ -32,7 +32,6 @@ export const fetchTodos = (page = 1, limit = 10) => {
       } else {
         url = "todo/alltodo";
       }
-
       const response = await fetch(
         `${"http://localhost:8090"}/${url}?limit=${limit}&page=${page}`,
         {
