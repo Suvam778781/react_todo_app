@@ -68,7 +68,7 @@ setAsignModal(true)
         align="center"
         sx={{ fontFamily: "inherit", margin: "2vh" }}
       >
-        USER DATA
+       ALL USER DATA
       </Typography>
       <TableContainer component={Paper} sx={{ maxWidth: 800, margin: "auto" }}>
         {user.loading && <LinearProgress />}
@@ -97,23 +97,25 @@ setAsignModal(true)
                   >
                     <Edit />
                   </IconButton>
-                  <IconButton
+               
+               {user.id!==1&& <IconButton
                     aria-label="delete"
                     onClick={() => handleDelete(user.id)}
                     style={{ width: "50px" }}
                   >
                     <Delete />
-                  </IconButton>
+                  </IconButton>}
                 </TableCell>
                 <TableCell>
                   {" "}
-                  <Button
+                
+                  {user.id!==1&& <Button
                     variant="contained"
                     startIcon={<Assignment />}
                     onClick={() => handleAssignTodo(user)}
                   >
                     Assign
-                  </Button>
+                  </Button>}
                 </TableCell>
               </TableRow>
             ))}

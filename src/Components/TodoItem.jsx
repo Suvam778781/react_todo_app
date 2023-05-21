@@ -42,10 +42,11 @@ const TodoList = () => {
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-
-  const handleAssignTodo = (TodoID, email) => {
+  const[assignTodoId,setAssignTodoId]=useState("")
+let role=localStorage.getItem("role")
+  const handleAssignTodo = (TodoID) => {
     setOpen((prev)=>!prev)
-
+    setAssignTodoId(TodoID)
     // dispatch()
   };
 
@@ -98,7 +99,7 @@ const TodoList = () => {
   return (
     <Box>
       <Typography fontSize="70px" color="grey" margin="22px">
-        {auth.role} Table
+        {role} table
       </Typography>
       <TableContainer
         style={{
@@ -151,7 +152,7 @@ const TodoList = () => {
                       <Button
                         variant="contained"
                         startIcon={<Assignment />}
-                        onClick={() => handleAssignTodo()}
+                        onClick={() => handleAssignTodo(todo.id)}
                       >
                         Assign
                       </Button>
@@ -218,7 +219,7 @@ const TodoList = () => {
         openAddTodoModal={openAddTodoModal}
       />
       <PieChart values={PieValues} lebels={PieLabels} />
-      <EmailModal  open={open} setOpen={setOpen} handleAssignTodo={handleAssignTodo} />
+      <EmailModal  open={open} setOpen={setOpen} handleAssignTodo={handleAssignTodo} assigneTodoId={assignTodoId} />
     </Box>
     
   );
