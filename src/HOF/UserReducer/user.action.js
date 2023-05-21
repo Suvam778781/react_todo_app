@@ -47,7 +47,7 @@ export const fetchUsers = () => {
 };
 
 // Assign todo to user action
-export const assignTodoToUser = (email, todo) => {
+export const assignTodoToUser = (mail, todo) => {
   return async (dispatch) => {
      let email = localStorage.getItem("user_email");
       let token = localStorage.getItem("login_token");
@@ -63,7 +63,7 @@ export const assignTodoToUser = (email, todo) => {
           "Content-Type": "application/json",
           Authorization: token,
           Email: email,
-          specific_user_email:email
+          specific_user_email:mail
         },
       body:JSON.stringify(todo)
       }

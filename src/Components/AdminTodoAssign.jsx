@@ -10,10 +10,11 @@ export default function AsminAssignTodo({ queryHandeler }) {
   const [clickSugg, setClickSugge] = useState("");
   const getData = async () => {
     const email=JSON.stringify(localStorage.getItem("user_email"))
-    const token=JSON.stringify(localStorage.getItem("user_token"))
+    const token=JSON.stringify(localStorage.getItem("login_token"))
     try{
-    const res= await fetch("http://localhost:8090/user/usertouser", {
+    const res= await fetch("https://ill-cyan-cricket-cap.cyclic.app/user/usertouser", {
       headers: {
+
         email:email,
         Authorization:token
       }
