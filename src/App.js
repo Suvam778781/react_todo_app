@@ -18,9 +18,8 @@ function App() {
   console.log(text,"check");
   return (
     <div className="App">
-      <AsminAssignTodo queryHandeler={queryHandeler} />
-
-      {location.pathname == "/" && <Navbar />}
+      {(location.pathname=="/"||"/dashboard")&&<Navbar/>}
+    <AllRoutes/>
       <AllRoutes />
     </div>
   );

@@ -1,11 +1,32 @@
-import React from 'react'
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import { AddIcCall, Home, Person2, Settings, TableChart } from "@mui/icons-material";
 
-const SideBar = () => {
+const Sidebar = ({setstate,state}) => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <Box sx={{ width: "240px", backgroundColor: "#00d5fa", height: "86vh" }}>
+      <List typography="body1">
+        <ListItem>
+          <ListItemIcon>
+            <TableChart/>
+          </ListItemIcon>
+          <ListItemText onClick={()=>{setstate(1)}} primary="User Table" />
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
+          <Person2/>
+          </ListItemIcon>
+          <ListItemText onClick={()=>{setstate(2)}}  primary="Add User" />
+        </ListItem>
+      </List>
+    </Box>
+  );
+};
 
-export default SideBar
+export default Sidebar;
