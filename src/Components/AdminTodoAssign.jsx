@@ -10,11 +10,12 @@ export default function AsminAssignTodo({ queryHandeler }) {
   const [clickSugg, setClickSugge] = useState("");
   const getData = async () => {
     const email=JSON.stringify(localStorage.getItem("user_email"))
-    const token=JSON.stringify(localStorage.getItem("user_token"))
+    const token=JSON.stringify(localStorage.getItem("login_token"))
     try{
     const res= await fetch("https://ill-cyan-cricket-cap.cyclic.app/user/usertouser", {
       headers: {
-        email: email,
+
+        email:email,
         Authorization:token
       }
     })
@@ -63,7 +64,7 @@ export default function AsminAssignTodo({ queryHandeler }) {
     } else {
       let formatTextQ = input.trim().toLowerCase();
       console.log(formatTextQ);
-      let newSuggestion = data
+      let newSuggestion = data.length>0&&data
         .filter((elm) => {
           return elm.email.toLowerCase().indexOf(formatTextQ) !== -1
             ? true
