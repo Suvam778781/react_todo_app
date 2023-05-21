@@ -12,10 +12,10 @@ export default function AsminAssignTodo({ queryHandeler }) {
     const email=JSON.stringify(localStorage.getItem("user_email"))
     const token=JSON.stringify(localStorage.getItem("user_token"))
     try{
-    const res= await fetch("http://localhost:8090/user/usertouser", {
+    const res= await fetch("https://ill-cyan-cricket-cap.cyclic.app/user/usertouser", {
       headers: {
-        email: "user02@gmail.com",
-        Authorization:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdfaWQiOiIxNjg0NjEwOTMwNjQwX2ZrdjN4ayIsImlhdCI6MTY4NDY2ODY4MH0.gih7U0DD2VjYeeU9RsSclEZFfX3GwhOGwqIMSD-YuLI"
+        email: email,
+        Authorization:token
       }
     })
 

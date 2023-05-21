@@ -39,7 +39,7 @@ export const fetchTodos = (page = 1, limit = 10) => {
         `https://ill-cyan-cricket-cap.cyclic.app/${url}?limit=${limit}&page=${page}`,
         {
           headers: {
-            "Content-Type": "text/plain",
+            "Content-Type": "application/json",
             Authorization: token,
             Email: email,
           },
@@ -47,7 +47,7 @@ export const fetchTodos = (page = 1, limit = 10) => {
       );
       const data = await response.json();
       console.log(data);
-      if (!data.error) {
+      if (!data.error&&!data.message) {
         dispatch({ type: FETCH_TODOS_SUCCESS, payload: data });
       } else {
         dispatch({ type: FETCH_TODOS_FAILURE, error: "Failed to fetch todos" });
