@@ -10,12 +10,10 @@ export default function AsminAssignTodo({ queryHandeler }) {
   const [bool, setBool] = useState(false);
   const [clickSugg, setClickSugge] = useState("");
   const getData = async () => {
-
     const dummydata = ["user@example.com", "client@example.com"];
 
     setData(dummydata);
 
-   
     const token = localStorage.getItem("login_token");
     console.log(token);
 
@@ -31,14 +29,11 @@ export default function AsminAssignTodo({ queryHandeler }) {
   useEffect(() => {
     getData()
       .then((res) => {
-      console.log(res);
+        console.log(res);
         setData(res);
-        
       })
       .catch((error) => {
-      
         console.log(error);
-        
       });
   }, []);
 
@@ -54,22 +49,24 @@ export default function AsminAssignTodo({ queryHandeler }) {
     if (input === "") {
       setSuggestion([]);
     } else {
-      let formatTextQ = input.trim().toLowerCase();
+      console.log(input, "input");
+      let formatTextQ = input.trim()?.toLowerCase();
 
-      let newSuggestion =data.length>0&& data
-        .filter((elm) => {
-          return elm.email.toLowerCase().indexOf(formatTextQ) !== -1
-            ? true
-            : false;
-        })
-        .map((elm) => {
-          return elm.email;
-        });
-        if(!newSuggestion){
-          const dumyData=["user@example.com","client@example.com"]
-          setSuggestion(dumyData)
-        }
-      else setSuggestion(newSuggestion);
+      let newSuggestion =
+        data.length > 0 &&
+        data
+          .filter((elm) => {
+            return elm.email?.toLowerCase().indexOf(formatTextQ) !== -1
+              ? true
+              : false;
+          })
+          .map((elm) => {
+            return elm.email;
+          });
+      if (!newSuggestion) {
+        const dumyData = ["user@example.com", "client@example.com"];
+        setSuggestion(dumyData);
+      } else setSuggestion(newSuggestion);
 
       console.log(newSuggestion, "new suggestion");
     }
@@ -139,15 +136,16 @@ export default function AsminAssignTodo({ queryHandeler }) {
       </Box>
       {!bool && (
         <Box className={classes.suggestionContainer}>
-          {suggestion.length>0&&suggestion.map((elm, i) => (
-            <Box
-              key={i + 1}
-              onClick={() => handelSetValue(elm)}
-              className={classes.suggestionItem}
-            >
-              <h6>{elm}</h6>
-            </Box>
-          ))}
+          {suggestion.length > 0 &&
+            suggestion.map((elm, i) => (
+              <Box
+                key={i + 1}
+                onClick={() => handelSetValue(elm)}
+                className={classes.suggestionItem}
+              >
+                <h6>{elm}</h6>
+              </Box>
+            ))}
         </Box>
       )}
     </>
