@@ -87,7 +87,7 @@ const TodoList = () => {
   };
 
   const topics = todos.map((x) => x.status);
-  console.log(topics);
+  // console.log(topics);
   const topicCounts = {};
   topics?.forEach((t) => {
     if (topicCounts[t]) topicCounts[t]++;
