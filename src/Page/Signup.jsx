@@ -28,7 +28,6 @@ const Signup = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-
   const store = useSelector((store) => store.authReducer);
   const dispatch = useDispatch();
   const loading = store.loading;
@@ -156,7 +155,18 @@ const Signup = () => {
         </Button>
       </form>
       <Box height="50px" p="3" margin="auto" marginTop="20px">
-        Have an account? <a href="/login">Login</a>
+        Already have an account?&nbsp;
+        <a
+          href="/login"
+          style={{
+            textDecoration: "none",
+            color: "#00d5fa",
+            fontWeight: "700",
+            padding: "2 3 4 5",
+          }}
+        >
+          Log In Here
+        </a>
       </Box>
     </Box>
   );

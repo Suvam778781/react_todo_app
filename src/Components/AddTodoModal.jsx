@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addTodo } from '../HOF/TodoReducer/todo.action';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../HOF/TodoReducer/todo.action";
 import {
   Dialog,
   DialogTitle,
@@ -12,15 +12,13 @@ import {
   Select,
   InputLabel,
   MenuItem,
-} from '@mui/material';
+} from "@mui/material";
 
 const AddTodoModal = ({ openAddTodoModal, setOpenAddTodoModal }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
- 
-
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -41,11 +39,11 @@ const AddTodoModal = ({ openAddTodoModal, setOpenAddTodoModal }) => {
       status,
     };
     dispatch(addTodo(newTodo));
-    setOpenAddTodoModal(false)
+    setOpenAddTodoModal(false);
   };
 
   return (
-    <Dialog open={openAddTodoModal} onClose={()=>setOpenAddTodoModal(false)}>
+    <Dialog open={openAddTodoModal} onClose={() => setOpenAddTodoModal(false)}>
       <DialogTitle>Add Todo</DialogTitle>
       <DialogContent>
         <FormControl fullWidth margin="normal">
@@ -65,15 +63,21 @@ const AddTodoModal = ({ openAddTodoModal, setOpenAddTodoModal }) => {
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
-          <InputLabel>Status</InputLabel>
-          <Select value={status} onChange={handleStatusChange} required>
+          <InputLabel id="Addnew_status">Status</InputLabel>
+          <Select
+            labelId="Addnew_status"
+            value={status}
+            onChange={handleStatusChange}
+            label="Status"
+            required
+          >
             <MenuItem value={0}>Pending</MenuItem>
             <MenuItem value={1}>Completed</MenuItem>
           </Select>
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={()=>setOpenAddTodoModal(false)}>Cancel</Button>
+        <Button onClick={() => setOpenAddTodoModal(false)}>Cancel</Button>
         <Button onClick={handleAddTodo} color="primary" variant="contained">
           Create
         </Button>

@@ -42,11 +42,11 @@ const TodoList = () => {
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const[assignTodoId,setAssignTodoId]=useState("")
-let role=localStorage.getItem("role")
+  const [assignTodoId, setAssignTodoId] = useState("");
+  let role = localStorage.getItem("role");
   const handleAssignTodo = (TodoID) => {
-    setOpen((prev)=>!prev)
-    setAssignTodoId(TodoID)
+    setOpen((prev) => !prev);
+    setAssignTodoId(TodoID);
     // dispatch()
   };
 
@@ -132,8 +132,13 @@ let role=localStorage.getItem("role")
                   <TableCell>{todo.id}</TableCell>
                   <TableCell>{todo.title}</TableCell>
                   <TableCell>{todo.description}</TableCell>
-                  
-                  <TableCell style={{color:todo.status==0?"red":"green",fontWeight:600}}>
+
+                  <TableCell
+                    style={{
+                      color: todo.status == 0 ? "red" : "green",
+                      fontWeight: 600,
+                    }}
+                  >
                     {todo.status === 0 ? "Pending" : "Completed"}
                   </TableCell>
                   <TableCell width="40%" align="center">
@@ -150,14 +155,16 @@ let role=localStorage.getItem("role")
                       >
                         <Delete />
                       </IconButton>
-                       
-                      {role=="user"&&<Button
-                        variant="contained"
-                        startIcon={<Assignment />}
-                        onClick={() => handleAssignTodo(todo.id)}
-                      >
-                        Assign
-                      </Button>}
+
+                      {role == "user" && (
+                        <Button
+                          variant="contained"
+                          startIcon={<Assignment />}
+                          onClick={() => handleAssignTodo(todo.id)}
+                        >
+                          Assign
+                        </Button>
+                      )}
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -193,10 +200,12 @@ let role=localStorage.getItem("role")
             />
           </FormControl>
           <FormControl fullWidth margin="normal">
-            <InputLabel>Status</InputLabel>
+            <InputLabel id="edit_status">Status</InputLabel>
             <Select
+              labelId="edit_status"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
+              label="Status"
               required
             >
               <MenuItem value={0}>Pending</MenuItem>
@@ -221,9 +230,13 @@ let role=localStorage.getItem("role")
         openAddTodoModal={openAddTodoModal}
       />
       <PieChart values={PieValues} lebels={PieLabels} />
-      <EmailModal  open={open} setOpen={setOpen} handleAssignTodo={handleAssignTodo} assigneTodoId={assignTodoId} />
+      <EmailModal
+        open={open}
+        setOpen={setOpen}
+        handleAssignTodo={handleAssignTodo}
+        assigneTodoId={assignTodoId}
+      />
     </Box>
-    
   );
 };
 

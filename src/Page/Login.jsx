@@ -140,6 +140,7 @@ const Login = () => {
             labelId="user-type-label"
             id="user-type"
             name="userType"
+            label="User-Type"
             value={formData.userType}
             onChange={handleChange}
             required
@@ -174,7 +175,7 @@ const Login = () => {
             padding: "2 3 4 5",
           }}
         >
-          Signup
+          Sign Up Here
         </a>
       </Box>
     </Box>
