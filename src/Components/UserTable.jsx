@@ -9,7 +9,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  IconButton,
   Button,
   Typography,
   FormControl,
@@ -17,7 +16,15 @@ import {
   Modal,
   LinearProgress,
 } from "@mui/material";
-import { Edit, Delete, Assignment } from "@mui/icons-material";
+import {
+  Edit,
+  Delete,
+  Assignment,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import {
   updateUser,
   deleteUser,
@@ -28,8 +35,10 @@ import AssignTodoToUser from "./AssignTodoToUser";
 const UserTable = () => {
   const [editModal, setEditModal] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
-  const [asigneuser,setAssigneuser]=useState({});
-  const[asignModal,setAsignModal]=useState(false);
+  const [asigneuser, setAssigneuser] = useState({});
+  const [asignModal, setAsignModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const dispatch = useDispatch();
   const users = useSelector((store) => store.userReducer.users);
   const user = useSelector((store) => store.userReducer);
@@ -57,8 +66,12 @@ const UserTable = () => {
     dispatch(deleteUser(id));
   };
   const handleAssignTodo = (user) => {
-setAssigneuser(user)
-setAsignModal(true)
+    setAssigneuser(user);
+    setAsignModal(true);
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -68,7 +81,7 @@ setAsignModal(true)
         align="center"
         sx={{ fontFamily: "inherit", margin: "2vh" }}
       >
-       ALL USER DATA
+        ALL USER DATA
       </Typography>
       <TableContainer component={Paper} sx={{ maxWidth: 800, margin: "auto" }}>
         {user.loading && <LinearProgress />}
@@ -83,42 +96,46 @@ setAsignModal(true)
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.length>0&&users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.firstname}</TableCell>
-                <TableCell>{user.lastname}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  <IconButton
-                    aria-label="edit"
-                    onClick={() => handleEditModalOpen(user)}
-                    style={{ width: "50px" }}
-                  >
-                    <Edit />
-                  </IconButton>
-               
-               {user.id!==1&& <IconButton
-                    aria-label="delete"
-                    onClick={() => handleDelete(user.id)}
-                    style={{ width: "50px" }}
-                  >
-                    <Delete />
-                  </IconButton>}
-                </TableCell>
-                <TableCell>
-                  {" "}
-                
-                  {user.id!==1&& <Button
-                    variant="contained"
-                    startIcon={<Assignment />}
-                    onClick={() => handleAssignTodo(user)}
-                  >
-                    Assign
-                  </Button>}
-                </TableCell>
-              </TableRow>
-            ))}
+            {users.length > 0 &&
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.firstname}</TableCell>
+                  <TableCell>{user.lastname}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() => handleEditModalOpen(user)}
+                      style={{ width: "50px" }}
+                    >
+                      <Edit />
+                    </IconButton>
+
+                    {user.id !== 1 && (
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => handleDelete(user.id)}
+                        style={{ width: "50px" }}
+                      >
+                        <Delete />
+                      </IconButton>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {" "}
+                    {user.id !== 1 && (
+                      <Button
+                        variant="contained"
+                        startIcon={<Assignment />}
+                        onClick={() => handleAssignTodo(user)}
+                      >
+                        Assign
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -197,7 +214,10 @@ setAsignModal(true)
             </FormControl>
             <FormControl fullWidth sx={{ marginTop: 2 }}>
               <TextField
-                label="Email"
+                id="password"
+                name="password"
+                label="Password"
+                type={showPassword ? "text" : "password"}
                 value={editedUser?.password || ""}
                 onChange={(e) =>
                   setEditedUser((prevUser) => ({
@@ -205,6 +225,19 @@ setAsignModal(true)
                     password: e.target.value,
                   }))
                 }
+                required
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleTogglePasswordVisibility}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </FormControl>
           </Box>
@@ -226,8 +259,12 @@ setAsignModal(true)
         </Box>
       </Modal>
 
-<AssignTodoToUser asignModal={asignModal}setAsignModal={setAsignModal} email={asigneuser.email} firstname={asigneuser.firstname}/>
-
+      <AssignTodoToUser
+        asignModal={asignModal}
+        setAsignModal={setAsignModal}
+        email={asigneuser.email}
+        firstname={asigneuser.firstname}
+      />
     </Box>
   );
 };

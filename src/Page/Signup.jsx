@@ -11,6 +11,10 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 import { Register_FN } from "../HOF/AuthReducer/auth.action";
 import { useNavigate } from "react-router-dom";
 
@@ -21,6 +25,9 @@ const Signup = () => {
     email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const store = useSelector((store) => store.authReducer);
   const dispatch = useDispatch();
@@ -49,6 +56,10 @@ const Signup = () => {
     }
   }, [store.isUserAlreadyRegister, store.userRegister]);
 
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   const validateForm = () =>
     formData.firstname.length > 0 &&
     formData.lastname.length > 0 &&
@@ -69,16 +80,14 @@ const Signup = () => {
     >
       {loading ? <LinearProgress /> : ""}
 
-      {
-       !store.isUserAlreadyRegister ? (
-          <Typography variant="h4" align="center" mb={4}>
-            Signup
-          </Typography>
-        ) : (
-          <Alert severity="warning">Account-Already present please sign up</Alert>
-        )
-        }
-      
+      {!store.isUserAlreadyRegister ? (
+        <Typography variant="h4" align="center" mb={4}>
+          Signup
+        </Typography>
+      ) : (
+        <Alert severity="warning">Account-Already present please sign up</Alert>
+      )}
+
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth margin="normal">
           <TextField
@@ -118,13 +127,25 @@ const Signup = () => {
             id="password"
             name="password"
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={formData.password}
             onChange={handleInputChange}
             required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleTogglePasswordVisibility}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </FormControl>
-      <Button
+        <Button
           type="submit"
           variant="contained"
           color="primary"

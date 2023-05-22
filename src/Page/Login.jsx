@@ -1,4 +1,4 @@
-  import React, { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   Alert,
@@ -14,6 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 import { useDispatch, useSelector } from "react-redux";
 import { Login_FN } from "../HOF/AuthReducer/auth.action";
 import { Link, useNavigate } from "react-router-dom";
@@ -27,6 +31,7 @@ const Login = () => {
     password: "",
     userType: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const store = useSelector((store) => store.authReducer);
@@ -61,6 +66,10 @@ const Login = () => {
     }
   }, [store.userLogin, store.AccNotFound]);
 
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   return (
     <Box
       sx={{
@@ -73,7 +82,11 @@ const Login = () => {
       }}
     >
       {loading ? <LinearProgress /> : ""}
-      {store.wrongPass ? <Alert severity={"error"}>{"Wrong Password Please try again"}</Alert> : ""}
+      {store.wrongPass ? (
+        <Alert severity={"error"}>{"Wrong Password Please try again"}</Alert>
+      ) : (
+        ""
+      )}
       {!store.AccNotFound ? (
         <Typography variant="h4" align="center" mb={4}>
           Login
@@ -103,10 +116,22 @@ const Login = () => {
             id="password"
             name="password"
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={formData.password}
             onChange={handleChange}
             required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleTogglePasswordVisibility}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </FormControl>
         <FormControl fullWidth margin="normal">

@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import {
   Box,
@@ -13,13 +11,13 @@ import { useDispatch } from "react-redux";
 import { blue } from "@mui/material/colors";
 import { assignTodoToUser } from "../HOF/UserReducer/user.action";
 
-const AssignTodoToUser = ({asignModal,setAsignModal,firstname,email }) => {
+const AssignTodoToUser = ({ asignModal, setAsignModal, firstname, email }) => {
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
     deadline: "",
   });
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "deadline") {
@@ -36,12 +34,13 @@ const AssignTodoToUser = ({asignModal,setAsignModal,firstname,email }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission or save task data
-    console.log(taskData,email);
-    dispatch(assignTodoToUser(email,taskData))
-  setAsignModal(false);
+    console.log(taskData, email);
+    dispatch(assignTodoToUser(email, taskData));
+    setAsignModal(false);
+    setTaskData({});
   };
   return (
-    <Modal open={asignModal} onClose={()=>setAsignModal(false)}>
+    <Modal open={asignModal} onClose={() => setAsignModal(false)}>
       <Box
         sx={{
           display: "flex",
@@ -67,7 +66,7 @@ const AssignTodoToUser = ({asignModal,setAsignModal,firstname,email }) => {
           }}
         >
           <Typography variant="h5" align="center" mt={2} mb={4}>
-            Assign Task <span style={{color:blue}}>{firstname}</span>
+            Assign Task <span style={{ color: blue }}>{firstname}</span>
           </Typography>
           <form onSubmit={handleSubmit}>
             <FormControl fullWidth margin="normal">
@@ -117,7 +116,7 @@ const AssignTodoToUser = ({asignModal,setAsignModal,firstname,email }) => {
                 mt: 4,
               }}
             >
-              <Button onClick={()=>setAsignModal(false)} mr={2}>
+              <Button onClick={() => setAsignModal(false)} mr={2}>
                 Cancel
               </Button>
               <Button type="submit" variant="contained" color="primary">

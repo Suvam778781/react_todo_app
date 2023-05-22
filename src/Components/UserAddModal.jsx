@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { Box, Button, FormControl, TextField,LinearProgress,Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  TextField,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../HOF/UserReducer/user.action";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 const UserAddModal = ({ setstate }) => {
   const [user, setUser] = useState({
     firstname: "",
@@ -9,6 +19,9 @@ const UserAddModal = ({ setstate }) => {
     email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const users = useSelector((store) => store.userReducer);
   const dispatch = useDispatch();
 
@@ -26,6 +39,10 @@ const UserAddModal = ({ setstate }) => {
     return user.email.length > 0 && user.password.length > 0;
   };
 
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   return (
     <Box
       sx={{
@@ -38,7 +55,7 @@ const UserAddModal = ({ setstate }) => {
         backgroundColor: "#ccf7fe",
       }}
     >
-          {users.loading && <LinearProgress />}
+      {users.loading && <LinearProgress />}
       <Typography variant="h4" align="center" mb={4}>
         Add User
       </Typography>
@@ -82,12 +99,24 @@ const UserAddModal = ({ setstate }) => {
         <FormControl fullWidth margin="normal">
           <TextField
             id="password"
+            name="Password"
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={user.password}
             onChange={handleChange}
-            sx={{ backgroundColor: "#FFFFFF" }}
             required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleTogglePasswordVisibility}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </FormControl>
 
