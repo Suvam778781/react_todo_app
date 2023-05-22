@@ -167,7 +167,7 @@ const Login_FN = ({ email, password, userType }) => {
       );
       data = await data.data;
      
-
+console.log(data,"data");
       if (data.message) {
        
 localStorage.setItem("role",data.role)
@@ -178,10 +178,15 @@ localStorage.setItem("role",data.role)
       if (error.response.data?.wrong) {
        
         dispatch(WrongPass())
+        
+        console.log(error.response.data?.wrong);
       }
-      else if (error.response?.data) {
+      else if (error.response?.data.error) {
         dispatch(login_noAcc_found());
-      } else dispatch(login_failure());
+        console.log(error.response?.data);
+      } else {
+        console.log(error);
+        dispatch(login_failure());}
     }
   };
 };
