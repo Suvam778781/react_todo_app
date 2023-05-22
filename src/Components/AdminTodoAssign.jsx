@@ -19,7 +19,7 @@ export default function AsminAssignTodo({ queryHandeler }) {
     const token = localStorage.getItem("login_token");
     console.log(token);
 
-    return fetch("http://localhost:8090/user/getalluser", {
+    return fetch("https://ill-cyan-cricket-cap.cyclic.app/user/usertouser", {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -31,7 +31,7 @@ export default function AsminAssignTodo({ queryHandeler }) {
   useEffect(() => {
     getData()
       .then((res) => {
-      
+      console.log(res);
         setData(res);
         
       })
