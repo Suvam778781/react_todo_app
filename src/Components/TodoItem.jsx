@@ -93,20 +93,19 @@ const TodoList = () => {
     if (topicCounts[t]) topicCounts[t]++;
     else topicCounts[t] = 1;
   });
-  const PieLabels = Object.keys(topicCounts);
   const PieValues = Object.values(topicCounts);
 
   return (
     <Box>
       <Typography fontSize="70px" color="grey" margin="22px">
-        {role} table
+        {role.toUpperCase()} TABLE
       </Typography>
       <TableContainer
         style={{
           height: "400px",
           maxWidth: 800,
           margin: "auto",
-          marginTop: "140px",
+          marginTop: "40px",
           p: 4,
           border: "2px solid",
           borderColor: "#00d5fa",
@@ -229,7 +228,7 @@ const TodoList = () => {
         setOpenAddTodoModal={setOpenAddTodoModal}
         openAddTodoModal={openAddTodoModal}
       />
-      <PieChart values={PieValues} lebels={PieLabels} />
+      <PieChart values={PieValues}/>
       <EmailModal
         open={open}
         setOpen={setOpen}
