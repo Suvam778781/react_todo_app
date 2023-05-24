@@ -5,6 +5,7 @@ import Navbar from "./Components/Navbar";
 import { useLocation } from "react-router-dom";
 import AsminAssignTodo from "./Components/AdminTodoAssign";
 import { useCallback, useState } from "react";
+import Profile from "./Components/Profile";
 
 function App() {
   const location = useLocation();
@@ -20,6 +21,8 @@ function App() {
       ) : null}
       <AllRoutes />
 
+      {/* <Profile /> */}
+     
     </div>
   );
 }
