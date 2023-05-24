@@ -167,15 +167,15 @@ const Login_FN = ({ email, password, userType }) => {
       );
       data = await data.data;
      
-console.log(data,"data");
-      if (data.message) {
+
+      if (data?.message) {
        
 localStorage.setItem("role",data.role)
         dispatch(login_success(data.token));
       }
     } catch (error) {
-      
-      if (error.response.data?.wrong) {
+      console.log(error);
+      if (error.response?.data?.wrong) {
        
         dispatch(WrongPass())
         
