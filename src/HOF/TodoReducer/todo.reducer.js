@@ -14,6 +14,7 @@ import {
   UPDATE_TODO_FAILURE,
   UPDATE_TODO_REQUEST,
   UPDATE_TODO_SUCCESS,
+  DRAG_TODO
 } from "./todo.actionTypes";
 
 const initialState = {
@@ -69,6 +70,13 @@ const todoReducer = (state = initialState, action) => {
         loading: false,
         error: null,
       };
+
+      case DRAG_TODO:
+       
+     return{
+         ...state,
+         todos:action.payload
+         }
     case FETCH_TODOS_FAILURE:
     case ADD_TODO_FAILURE:
     case DELETE_TODO_FAILURE:
@@ -102,7 +110,10 @@ const todoReducer = (state = initialState, action) => {
       };
     default:
       return state;
-  }
+  };
+
+  
+
 };
 
 export { todoReducer };

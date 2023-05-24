@@ -190,6 +190,7 @@ localStorage.setItem("role",data.role)
     }
   };
 };
+
 const logout_FN=()=>{
   return {type:actionTypes.LOGOUT}
 }

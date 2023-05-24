@@ -15,6 +15,7 @@ import {
   UPDATE_TODO_FAILURE,
   UPDATE_TODO_REQUEST,
   UPDATE_TODO_SUCCESS,
+  DRAG_TODO,
 } from "./todo.actionTypes";
 // Fetch all todos action
 export const fetchTodos = (page = 1, limit = 10) => {
@@ -211,3 +212,10 @@ export const assignTodoToUser = (todoId, mail) => {
     }
   };
 };
+
+export const dragTodo=(payload)=>{
+   return (dispatch)=>{
+      dispatch({type:DRAG_TODO,payload})
+    }
+     
+}
