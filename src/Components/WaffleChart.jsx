@@ -7,22 +7,22 @@ const WaffleChart = ({ values }) => {
     {
       id: "In-Progress",
       label: "In-Progress",
-      value: 6,
+      value: 122,
     },
     {
       id: "Pending",
       label: "Pending",
-      value: values[0],
+      value: 55,
     },
     {
       id: "Completed",
       label: "Completed",
-      value: values[1],
+      value: 81,
     },
     {
       id: "Late",
       label: "Late",
-      value: 8,
+      value: 63,
     },
   ];
   let total = 0;
@@ -40,7 +40,6 @@ const WaffleChart = ({ values }) => {
         rows={sq}
         columns={sq}
         padding={1}
-        valueFormat=".2f"
         margin={{ top: 10, right: 10, bottom: 10, left: 120 }}
         colors={{ scheme: "category10" }}
         borderRadius={3}
