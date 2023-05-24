@@ -30,7 +30,7 @@ const PieChart = ({ values }) => {
     },
   ];
   return (
-    <Box sx={{ height: "400px" }}>
+    <Box sx={{ height: "400px", fontSize: "16px" }}>
       <ResponsivePie
         data={data}
         theme={{

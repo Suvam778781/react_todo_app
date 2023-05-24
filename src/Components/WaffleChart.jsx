@@ -7,7 +7,7 @@ const WaffleChart = ({ values }) => {
     {
       id: "In-Progress",
       label: "In-Progress",
-      value: 5,
+      value: 6,
     },
     {
       id: "Pending",
@@ -22,7 +22,7 @@ const WaffleChart = ({ values }) => {
     {
       id: "Late",
       label: "Late",
-      value: 5,
+      value: 8,
     },
   ];
   let total = 0;
@@ -33,7 +33,7 @@ const WaffleChart = ({ values }) => {
   let sq = Math.ceil(Math.sqrt(total));
 
   return (
-    <Box sx={{ height: "400px" }}>
+    <Box sx={{ height: "400px", fontSize: "16px" }}>
       <ResponsiveWaffle
         data={data}
         total={sq * sq}
@@ -77,7 +77,6 @@ const WaffleChart = ({ values }) => {
             ],
           },
         ]}
-  
       />
     </Box>
   );
