@@ -26,8 +26,8 @@ import {
 import { Assignment, Delete, Edit } from "@mui/icons-material";
 import { deleteTodo, updateTodo } from "../HOF/TodoReducer/todo.action";
 import AddTodoModal from "./AddTodoModal";
-import PieChart from "./PieChart";
 import EmailModal from "./AssignUserTodoToAnathorUser.jsx";
+import DataVisualization from "./DataVisualization";
 
 const TodoList = () => {
   const todos = useSelector((state) => state.todoReducer.todos);
@@ -93,7 +93,7 @@ const TodoList = () => {
     if (topicCounts[t]) topicCounts[t]++;
     else topicCounts[t] = 1;
   });
-  const PieValues = Object.values(topicCounts);
+  const values = Object.values(topicCounts);
 
   return (
     <Box>
@@ -228,7 +228,7 @@ const TodoList = () => {
         setOpenAddTodoModal={setOpenAddTodoModal}
         openAddTodoModal={openAddTodoModal}
       />
-      <PieChart values={PieValues}/>
+      <DataVisualization values={values} />
       <EmailModal
         open={open}
         setOpen={setOpen}
