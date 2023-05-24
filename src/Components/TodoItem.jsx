@@ -26,8 +26,8 @@ import {
 import { Assignment, Delete, Edit } from "@mui/icons-material";
 import { deleteTodo, updateTodo } from "../HOF/TodoReducer/todo.action";
 import AddTodoModal from "./AddTodoModal";
-import PieChart from "./PieChart";
 import EmailModal from "./AssignUserTodoToAnathorUser.jsx";
+// import DataVisualization from "./DataVisualization";
 
 const TodoList = () => {
   const todo = useSelector((state) => state.todoReducer.todos);
@@ -91,7 +91,6 @@ const TodoList = () => {
     setDescription("");
     setStatus(0);
   };
-
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData("text/plain", id.toString());
     setDraggedItemId(id); // Set the draggedItemId state
@@ -114,18 +113,25 @@ const TodoList = () => {
     setTodos(updatedTodos);
     setDraggedItemId(null); // Reset the draggedItemId state
   };
-
+//   const topics = todos.map((x) => x.status);
+//   // console.log(topics);
+//   const topicCounts = {};
+//   topics?.forEach((t) => {
+//     if (topicCounts[t]) topicCounts[t]++;
+//     else topicCounts[t] = 1;
+//   });
+//   const values = Object.values(topicCounts);
   return (
     <Box>
       <Typography fontSize="70px" color="grey" margin="22px">
-        {role} table
+        {role.toUpperCase()} TABLE
       </Typography>
       <TableContainer
         style={{
           height: "400px",
           maxWidth: 800,
           margin: "auto",
-          marginTop: "140px",
+          marginTop: "40px",
           p: 4,
           border: "2px solid",
           borderColor: "#00d5fa",
@@ -258,6 +264,7 @@ const TodoList = () => {
         openAddTodoModal={openAddTodoModal}
       />
       {/* <PieChart values={PieValues} lebels={PieLabels} /> */}
+//       <DataVisualization values={values} />
       <EmailModal
         open={open}
         setOpen={setOpen}
