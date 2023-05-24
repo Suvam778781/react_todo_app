@@ -30,7 +30,8 @@ import PieChart from "./PieChart";
 import EmailModal from "./AssignUserTodoToAnathorUser.jsx";
 
 const TodoList = () => {
-  const todos = useSelector((state) => state.todoReducer.todos);
+  const todo = useSelector((state) => state.todoReducer.todos);
+  const [todos, setTodos] = useState(todo); // Added todos state
   const loading = useSelector((state) => state.todoReducer.loading);
   const auth = useSelector((state) => state.authReducer);
   console.log(todos);
@@ -43,13 +44,18 @@ const TodoList = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [assignTodoId, setAssignTodoId] = useState("");
+  const [draggedItemId, setDraggedItemId] = useState(null); // Added draggedItemId state
   let role = localStorage.getItem("role");
+
   const handleAssignTodo = (TodoID) => {
     setOpen((prev) => !prev);
     setAssignTodoId(TodoID);
     // dispatch()
   };
 
+  useEffect(() => {
+    setTodos(todo);
+  }, [todo]);
   const handleDeleteTodo = (id) => {
     dispatch(deleteTodo(id));
   };
@@ -86,15 +92,28 @@ const TodoList = () => {
     setStatus(0);
   };
 
-  const topics = todos.map((x) => x.status);
-  // console.log(topics);
-  const topicCounts = {};
-  topics?.forEach((t) => {
-    if (topicCounts[t]) topicCounts[t]++;
-    else topicCounts[t] = 1;
-  });
-  const PieLabels = Object.keys(topicCounts);
-  const PieValues = Object.values(topicCounts);
+  const handleDragStart = (e, id) => {
+    e.dataTransfer.setData("text/plain", id.toString());
+    setDraggedItemId(id); // Set the draggedItemId state
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetId) => {
+    const sourceId = e.dataTransfer.getData("text/plain");
+    const updatedTodos = [...todos];
+    const sourceIndex = todos.findIndex((todo) => todo.id === Number(sourceId));
+    const targetIndex = todos.findIndex((todo) => todo.id === Number(targetId));
+
+    const [removed] = updatedTodos.splice(sourceIndex, 1);
+    updatedTodos.splice(targetIndex, 0, removed);
+
+    // Update the state with the new order
+    setTodos(updatedTodos);
+    setDraggedItemId(null); // Reset the draggedItemId state
+  };
 
   return (
     <Box>
@@ -128,14 +147,23 @@ const TodoList = () => {
           <TableBody>
             {todos.length > 0 &&
               todos.map((todo) => (
-                <TableRow key={todo.id}>
+                <TableRow
+                  key={todo.id}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, todo.id)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, todo.id)}
+                  style={{
+                    backgroundColor: draggedItemId === todo.id ? "white" : "white",fontWeight:"500" // Apply background color when item is being dragged
+                  }}
+                >
                   <TableCell>{todo.id}</TableCell>
                   <TableCell>{todo.title}</TableCell>
                   <TableCell>{todo.description}</TableCell>
 
                   <TableCell
                     style={{
-                      color: todo.status == 0 ? "red" : "green",
+                      color: todo.status === 0 ? "red" : "green",
                       fontWeight: 600,
                     }}
                   >
@@ -156,7 +184,7 @@ const TodoList = () => {
                         <Delete />
                       </IconButton>
 
-                      {role == "user" && (
+                      {role === "user" && (
                         <Button
                           variant="contained"
                           startIcon={<Assignment />}
@@ -229,7 +257,7 @@ const TodoList = () => {
         setOpenAddTodoModal={setOpenAddTodoModal}
         openAddTodoModal={openAddTodoModal}
       />
-      <PieChart values={PieValues} lebels={PieLabels} />
+      {/* <PieChart values={PieValues} lebels={PieLabels} /> */}
       <EmailModal
         open={open}
         setOpen={setOpen}
