@@ -22,25 +22,29 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  Paper,
+  Grid,
+  CssBaseline,
 } from "@mui/material";
-import { Assignment, Delete, Edit } from "@mui/icons-material";
+import {
+  Assignment,
+  Delete,
+  Edit,
+  FormatListBulleted,
+  GridOn,
+} from "@mui/icons-material";
 import { deleteTodo, updateTodo } from "../HOF/TodoReducer/todo.action";
 import AddTodoModal from "./AddTodoModal";
-import PieChart from "./PieChart";
 import EmailModal from "./AssignUserTodoToAnathorUser.jsx";
-import {DndContext} from "@dnd-kit/core"
-import {SortableContext} from "@dnd-kit/sortable"
-import {useSortable} from "@dnd-kit/sortable"
-import {CSS} from "@dnd-kit/utilities"
+import DataVisualization from "./DataVisualization";
+import Pagination from "./Pagination";
+import SocketComponent from "./Socket.io";
 
-import { dragTodo } from "../HOF/TodoReducer/todo.action";
-import TodoTable from "./TodoTable";
-const TodoList = () => {
-  const todos= useSelector((state) => state.todoReducer.todos);
-
-  const loading = useSelector((state) => state.todoReducer.loading);
+const TodoList = ({ loading, page, setpage, totalPages }) => {
+  const todo = useSelector((state) => state.todoReducer.todos);
+  const [todos, setTodos] = useState(todo);
+  const [view, setView] = useState("list"); // Added todos state
   const auth = useSelector((state) => state.authReducer);
-  
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openAddTodoModal, setOpenAddTodoModal] = useState(false);
   const [editTodo, setEditTodo] = useState(null);
@@ -50,16 +54,32 @@ const TodoList = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [assignTodoId, setAssignTodoId] = useState("");
+  const [draggedItemId, setDraggedItemId] = useState(null); // Added draggedItemId state
   let role = localStorage.getItem("role");
+
   const handleAssignTodo = (TodoID) => {
     setOpen((prev) => !prev);
     setAssignTodoId(TodoID);
     // dispatch()
   };
 
+  useEffect(() => {
+    setTodos(todo);
+  }, [todo]);
   const handleDeleteTodo = (id) => {
     dispatch(deleteTodo(id));
   };
+const datevalid=(deadline)=>{
+  const deadlineFormat = /^date\((\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z)\)$/;
+  
+  if (!deadlineFormat.test(deadline)) {
+    // Invalid deadline format
+    return false;
+  }
+  const deadlineDate = new Date(deadline.match(deadlineFormat)[1]);
+  const today = new Date(); 
+  return today > deadlineDate;
+}
 
   const handleOpenEditModal = (todo) => {
     setEditTodo(todo);
@@ -92,106 +112,295 @@ const TodoList = () => {
     setDescription("");
     setStatus(0);
   };
+  const handleDragStart = (e, id) => {
+    e.dataTransfer.setData("text/plain", id.toString());
+    setDraggedItemId(id); // Set the draggedItemId state
+  };
 
-  // const topics = todos.map((x) => x.status);
-  // // console.log(topics);
-  // const topicCounts = {};
-  // topics?.forEach((t) => {
-  //   if (topicCounts[t]) topicCounts[t]++;
-  //   else topicCounts[t] = 1;
-  // });
-  // const PieValues = Object.values(topicCounts);
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
 
-const dragTodos=JSON.parse(localStorage.getItem("update"))
-const data=dragTodos||todos
-  const handleDragEnd=(event,id)=>{
-    const {active,over} =event
-    console.log(active.id,over.id)
-    if(active.id!==null && over.id!==null){
-    if(active.id!==over.id){
-    
- const dragData=()=>{
-  const oldIndex=todos.findIndex((item)=>item.id===active.id)
-  const newIndex=todos.findIndex((item)=>item.id===over.id)
-// console.log(oldIndex)
-// console.log(newIndex)
-  const newItems=[...todos]
+  const handleDrop = (e, targetId) => {
+    const sourceId = e.dataTransfer.getData("text/plain");
+    const updatedTodos = [...todos];
+    const sourceIndex = todos.findIndex((todo) => todo.id === Number(sourceId));
+    const targetIndex = todos.findIndex((todo) => todo.id === Number(targetId));
 
-  newItems.splice(oldIndex,1)
-  newItems.splice(newIndex,0,todos[oldIndex])
-  console.log("data",newItems)
-  localStorage.setItem("update",JSON.stringify(newItems))
-return newItems
-}
+    const [removed] = updatedTodos.splice(sourceIndex, 1);
+    updatedTodos.splice(targetIndex, 0, removed);
 
-dispatch(dragTodo(dragData()))
-
- }
-    }
-  }
-  
+    // Update the state with the new order
+    setTodos(updatedTodos);
+    setDraggedItemId(null); // Reset the draggedItemId state
+  };
+  const changeView = () => {
+    if (view === "list") setView("grid");
+    else setView("list");
+  };
+  const topics = todos.map((x) => x.status);
+  // console.log(topics);
+  const arraySize = 4;
+  let values = Array.from({ length: arraySize }, () => 0);
+  topics?.forEach((t) => {
+    values[t]++;
+  });
+  const email = localStorage.getItem("user_email");
   return (
     <Box>
-      <Typography fontSize="70px" color="grey" margin="22px">
-        {role.toUpperCase()} TABLE
-      </Typography>
-      <TableContainer
-        style={{
-          height: "400px",
-          maxWidth: 800,
-          margin: "auto",
-          marginTop: "40px",
-          p: 4,
-          border: "2px solid",
-          borderColor: "#00d5fa",
-          borderRadius: "7px",
-          overflowY: "scroll",
+      <Typography
+        variant="h1"
+        sx={{
+          fontSize: "40px",
+          color: "grey",
+          margin: "22px",
+          fontFamily: "Arial, sans-serif",
+          textTransform: "uppercase",
         }}
       >
-        {loading && <LinearProgress />}
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <DndContext onDragEnd={handleDragEnd}>
-        <SortableContext items={todos.map((todo)=>todo.id)}>
-          <TableBody>
-            {todos.length> 0 &&
-             data.map((item) => {
-              return (
-                <TodoTable
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  description={item.description}
-                  status={item.status}
-                  handleOpenEditModal= {handleOpenEditModal}
-                  handleDeleteTodo={handleDeleteTodo}
-                 handleAssignTodo={handleAssignTodo}
-                />
-              );
-            })}
-          
-              
-          </TableBody>
-          </SortableContext>
-      </DndContext>
-        </Table>
-      </TableContainer>
-      <Button
-        style={{ marginTop: "20px" }}
-        variant="contained"
-        startIcon={<Assignment />}
-        onClick={() => setOpenAddTodoModal(true)}
-      >
-        ADD TODO
-      </Button>
+        {role.toUpperCase()} TABLE
+      </Typography>
+      <Box>
+        <Button
+          style={{ marginRight: "20px" }}
+          variant="contained"
+          startIcon={<Assignment />}
+          onClick={() => setOpenAddTodoModal(true)}
+        >
+          ADD TODO
+        </Button>
+        {"  "}
+
+        <Button
+          style={{ marginLeft: "20px" }}
+          variant="contained"
+          startIcon={view === "list" ? <GridOn /> : <FormatListBulleted />}
+          onClick={changeView}
+        >
+          {view === "list" ? "GRID VIEW" : "LIST VIEW"}
+        </Button>
+      </Box>
+      <SocketComponent email={email} />
+      {view === "list" ? (
+        <TableContainer
+          style={{
+            height: "400px",
+            maxWidth: 800,
+            margin: "auto",
+            marginTop: "40px",
+            p: 4,
+            border: "2px solid",
+            borderColor: "#00d5fa",
+            borderRadius: "7px",
+            overflowY: "scroll",
+          }}
+        >
+          {loading && <LinearProgress />}
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>created_at</TableCell>
+                <TableCell>deadline</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {todos.length > 0 &&
+                todos.map((todo) => (
+                <TableRow
+                   
+                    key={todo.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, todo.id)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, todo.id)}
+                    style={{
+                    
+                      backgroundColor:
+                        draggedItemId === todo.id ? "white" : "white",
+                      fontWeight: "500", // Apply background color when item is being dragged
+                    }}
+                  >
+                    <TableCell>{todo.id}</TableCell>
+                    <TableCell>{todo.title}</TableCell>
+                    <TableCell>{todo.description}</TableCell>
+
+                    <TableCell
+                      style={{
+                        color:
+                          todo.status === 0
+                            ? "orange"
+                            : todo.status === 1
+                            ? "green"
+                            : todo.status === 2
+                            ? "blue"
+                            : "red",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {todo.status === 0
+                        ? "Pending"
+                        : todo.status === 1
+                        ? "Completed"
+                        : todo.status === 2
+                        ? "In-Progress"
+                        : "Late"}
+                    </TableCell>
+                    <TableCell>{todo.time_at_created}</TableCell>
+                    <TableCell>{todo.deadline_time}</TableCell>
+                    <TableCell width="40%" align="center">
+                      <Box display="flex" justifyContent="space-between">
+                        <IconButton
+                          aria-label="edit"
+                          onClick={() => handleOpenEditModal(todo)}
+                         disabled={datevalid(todo.deadline_time)}
+                          style={{color:datevalid(todo.deadline_time)?"red":"green"}}
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDeleteTodo(todo.id)}
+                        >
+                          <Delete />
+                        </IconButton>
+
+                        <Button
+                          variant="contained"
+                          startIcon={<Assignment />}
+                          onClick={() => handleAssignTodo(todo.id)}
+                        >
+                          Assign
+                        </Button>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start", // Align blocks to top-left
+            height: "400px",
+            overflowY: "scroll",
+            maxWidth: 800,
+            margin: "auto",
+            marginTop: "40px",
+            p: 4,
+            border: "2px solid",
+            borderColor: "#00d5fa",
+            borderRadius: "7px",
+            scrollbarWidth: "thin",
+            scrollbarColor: "#888 #f1f1f1",
+          }}
+        >
+          <CssBaseline />
+          <Box>
+            <Grid container spacing={2}>
+              {todos.map((todo) => (
+                <Grid
+                  item
+                  xs={4} // Adjust the width to keep a constant block size
+                  key={todo.id}
+                  sx={{
+                    fontWeight: "500",
+                    display: "flex",
+                    justifyContent: "flex-start", // Align block content to top-left
+                    paddingTop: "8px", // Add top padding for alignment
+                  }}
+                >
+                  <Paper
+                    sx={{
+                      p: 2,
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "100%",
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ mb: 1 }}>
+                      {todo.title}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        mb: 1,
+                        lineHeight: "1.2rem",
+                        maxHeight: "2.4rem",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {todo.description}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        mb: 2,
+                        color:
+                          todo.status === 0
+                            ? "orange"
+                            : todo.status === 1
+                            ? "green"
+                            : todo.status === 2
+                            ? "blue"
+                            : "red",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {todo.status === 0
+                        ? "Pending"
+                        : todo.status === 1
+                        ? "Completed"
+                        : todo.status === 2
+                        ? "In-Progress"
+                        : "Late"}
+                    </Typography>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <IconButton
+                        aria-label="edit"
+                        onClick={() => handleOpenEditModal(todo)}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => handleDeleteTodo(todo.id)}
+                      >
+                        <Delete />
+                      </IconButton>
+
+                      <IconButton
+                        aria-label="assign"
+                        onClick={() => handleAssignTodo(todo.id)}
+                      >
+                        <Assignment />
+                      </IconButton>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Box>
+      )}
+
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setpage}
+      />
       <Dialog open={openEditModal} onClose={handleCloseEditModal}>
         <DialogTitle>Edit Todo</DialogTitle>
         <DialogContent>
@@ -222,6 +431,7 @@ dispatch(dragTodo(dragData()))
             >
               <MenuItem value={0}>Pending</MenuItem>
               <MenuItem value={1}>Completed</MenuItem>
+              <MenuItem value={2}>In-Progress</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>
@@ -241,7 +451,8 @@ dispatch(dragTodo(dragData()))
         setOpenAddTodoModal={setOpenAddTodoModal}
         openAddTodoModal={openAddTodoModal}
       />
-      {/* <PieChart values={PieValues}/> */}
+      {/* <PieChart values={PieValues} lebels={PieLabels} /> */}
+      <DataVisualization values={values} />
       <EmailModal
         open={open}
         setOpen={setOpen}
@@ -253,47 +464,3 @@ dispatch(dragTodo(dragData()))
 };
 
 export default TodoList;
-
-
-// todos.map((todo) => (
-              //   <TableRow key={todo.id}>
-              //     <TableCell>{todo.id}</TableCell>
-              //     <TableCell>{todo.title}</TableCell>
-              //     <TableCell>{todo.description}</TableCell>
-
-              //     <TableCell
-              //       style={{
-              //         color: todo.status == 0 ? "red" : "green",
-              //         fontWeight: 600,
-              //       }}
-              //     >
-              //       {todo.status === 0 ? "Pending" : "Completed"}
-              //     </TableCell>
-              //     <TableCell width="40%" align="center">
-              //       <Box display="flex" justifyContent="space-between">
-              //         <IconButton
-              //           aria-label="edit"
-              //           onClick={() => handleOpenEditModal(todo)}
-              //         >
-              //           <Edit />
-              //         </IconButton>
-              //         <IconButton
-              //           aria-label="delete"
-              //           onClick={() => handleDeleteTodo(todo.id)}
-              //         >
-              //           <Delete />
-              //         </IconButton>
-
-              //         {role == "user" && (
-              //           <Button
-              //             variant="contained"
-              //             startIcon={<Assignment />}
-              //             onClick={() => handleAssignTodo(todo.id)}
-              //           >
-              //             Assign
-              //           </Button>
-              //         )}
-              //       </Box>
-              //     </TableCell>
-              //   </TableRow>
-              // ))}
