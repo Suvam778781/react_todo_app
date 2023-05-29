@@ -93,14 +93,14 @@ const TodoList = () => {
     setStatus(0);
   };
 
-  const topics = todos.map((x) => x.status);
-  // console.log(topics);
-  const topicCounts = {};
-  topics?.forEach((t) => {
-    if (topicCounts[t]) topicCounts[t]++;
-    else topicCounts[t] = 1;
-  });
-  const PieValues = Object.values(topicCounts);
+  // const topics = todos.map((x) => x.status);
+  // // console.log(topics);
+  // const topicCounts = {};
+  // topics?.forEach((t) => {
+  //   if (topicCounts[t]) topicCounts[t]++;
+  //   else topicCounts[t] = 1;
+  // });
+  // const PieValues = Object.values(topicCounts);
 
 const dragTodos=JSON.parse(localStorage.getItem("update"))
 const data=dragTodos||todos
@@ -241,7 +241,7 @@ dispatch(dragTodo(dragData()))
         setOpenAddTodoModal={setOpenAddTodoModal}
         openAddTodoModal={openAddTodoModal}
       />
-      <PieChart values={PieValues}/>
+      {/* <PieChart values={PieValues}/> */}
       <EmailModal
         open={open}
         setOpen={setOpen}

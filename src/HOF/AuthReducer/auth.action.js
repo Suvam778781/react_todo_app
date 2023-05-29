@@ -107,7 +107,7 @@ const Register_FN = ({ firstname, lastname, email, password }) => {
     dispatch(userRegisterReq());
 
     try {
-      let data = await axios.post(`https://ill-cyan-cricket-cap.cyclic.app/client/register`, {
+      let data = await axios.post(`http://54.252.178.248:8080/client/register`, {
         firstname,
         lastname,
         email,
@@ -158,7 +158,7 @@ const Login_FN = ({ email, password, userType }) => {
       const switchUrl = userType === "user" ? "user/login" : "client/login";
 
       let data = await axios.post(
-        `https://ill-cyan-cricket-cap.cyclic.app/${switchUrl}`,
+        `http://54.252.178.248:8080/${switchUrl}`,
         {
           email,
           password,

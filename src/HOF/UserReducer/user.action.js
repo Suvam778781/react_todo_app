@@ -26,7 +26,7 @@ export const fetchUsers = () => {
       let role = localStorage.getItem("role")
 
       // Make API call to fetch users
-      const users = await fetch(`https://ill-cyan-cricket-cap.cyclic.app/user/alluser`, {
+      const users = await fetch(`http://54.252.178.248:8080/user/alluser`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export const assignTodoToUser = (mail, todo) => {
     try {
       // Make API call to assign todo to user
       let response = await fetch(
-        `https://ill-cyan-cricket-cap.cyclic.app/client/assigntodo`,
+        `http://54.252.178.248:8080/client/assigntodo`,
         {
         method:"POST",
 
@@ -95,7 +95,7 @@ export const addUser = (user) => {
       let role = localStorage.getItem("role")
     try {
       // Make API call to add user
-      const response = await fetch(`https://ill-cyan-cricket-cap.cyclic.app/user/adduser`, {
+      const response = await fetch(`http://54.252.178.248:8080/user/adduser`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
@@ -134,7 +134,7 @@ export const updateUser = (userId, updatedUser) => {
     try {
       // Make API call to update user
       const response = await fetch(
-        `https://ill-cyan-cricket-cap.cyclic.app/user/updateuser/${userId}`,
+        `http://54.252.178.248:8080/user/updateuser/${userId}`,
         {
           method: "PATCH",
           headers: {
@@ -171,7 +171,7 @@ export const deleteUser = (userId) => {
       let role = localStorage.getItem("role")
       // Make API call to delete user
       const response = await fetch(
-        `https://ill-cyan-cricket-cap.cyclic.app/user/deleteuser/${userId}`,
+        `http://54.252.178.248:8080/user/deleteuser/${userId}`,
         {
           method: "DELETE",
           headers: {
